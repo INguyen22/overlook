@@ -1,11 +1,19 @@
 body {
-  background-image: url("../images/resort.png");
-  background-size: cover;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  height: 100vh;
+  margin: 0%;
+}
+
+.login-page {
+    background-image: url("../images/resort.png");
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.login-button:hover {
+  cursor: pointer;
 }
 
 h1 {
@@ -22,7 +30,7 @@ form {
   height: 200px;
   width: 300px;
   border-radius: 50px 0px;
-  margin-left: 215px;
+  margin-left: 80px;
 }
 
 .user-main-page {
@@ -41,14 +49,143 @@ header {
   display: flex;
   flex-direction: column;
   color: black;
-  background-color: lavender;
   align-items: flex-start;
   width: 100vw;
 }
 
+.logout-button {
+  margin-left: 95%;
+  background-color: #83f546;
+}
+
+.logout-button:hover {
+  background-color: #49d100;
+  transform: scale(1.075);
+  transition: 0.2s ease-in;
+  cursor: pointer;
+}
+
+.arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.right {
+  transform: rotate(-45deg);
+}
+
+.user-header {
+  display: flex;
+  width: 100vw;
+}
+
+.welcome-user, .available-rooms, .stay-statement {
+  margin-bottom: 0%;
+  margin-left: 3%;
+  color: white;
+  text-decoration: underline;
+}
+
+.search-button, .filter-room-input {
+  cursor: pointer;
+}
+
+.user-expenses {
+  margin-bottom: 0%;
+  margin-left: 62%;
+  color: white;
+}
+
 .user-content {
-  background-color: white;
+  display: grid;
+  grid-template-columns: auto auto;
   height: 100vh;
+  width: 100vw;
+}
+
+.booking-and-filtering {
+  display: flex;
+  margin-left: 3%;
+  color: white;
+}
+
+.rooms-container {
+  display: flex;
+  background-color: rgba(251, 251, 251, 0.3);
+  border-style: outset;
+  height: 73%;
+  margin-top: 5px;
+  margin-left: 3%;
+}
+
+aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.bookings-header {
+  margin-right: 25%;
+  color: white;
+}
+
+.user-bookings-container {
+  display: flex;
+  background-color: rgba(251, 251, 251, 0.3);
+  border-style: outset;
+  height: 79.5%;
+  width: 77%;
+  margin-right: 3%;
+}
+
+.room-details-and-book-container {
+  display: flex;
+  justify-content: space-around;
+  background-color: rgba(255, 236, 128, 0.882);
+  border-style: solid;
+  border-radius: 20px;
+  height: 25%;
+  width: 100%;
+}
+
+.user-booking-details{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(57, 245, 182, 0.884);
+  border-style: solid;
+  border-radius: 20px;
+  height: 17%;
+  width: 100%;
+}
+
+.room-details-and-book-container:hover, .user-booking-details:hover {
+  transform: scale(1.015);
+  transition: 0.2s ease-in;
+}
+
+.rates-and-book {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.book {
+  background-color: #9ae9f7;
+}
+
+.book:hover {
+  background-color: #46b9f5;
+  transform: scale(1.075);
+  transition: 0.2s ease-in;
+  cursor: pointer;
+}
+
+.room-spec2 {
+  margin: 0%;
 }
 
 .hidden {
