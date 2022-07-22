@@ -7,7 +7,38 @@
   <title>Webpack Starter Kit</title>
 </head>
 <body>
-  <img src="./images/turing-logo.png" alt="turing logo">
+  <section class="login-page hidden">
+    <h1>Welcome to the Overlook Resort</h1>
+    <form class="login-form">
+      <label for="username">Username</label>
+      <input type="text" placeholder="Enter Username" required>
+      <label for="password">Password</label>
+      <input type="text" placeholder="Enter Password" required>
+      <button class="login-button">Login</button>
+    </form>
+  </section>
+  <section class="user-main-page">
+    <header>
+      <button class="logout-button">Log out</button>
+      <h2>Welcome, user</h2>
+      <h3>Your total expenses: $0.00</h3>
+    </header>
+    <section class="user-content">
+      <section class="user-check-in-info">
+        <h3>Book your next stay</h3>
+        <label for="check-in">Check-In Date</label>
+        <input type="date" data-date-format="MM DD YYYY"></input>
+        <button class="search-button">search</button>
+        <container class="rooms-container"></container>
+      </section>
+      <aside class="bookings">
+        <h3>Past and Upcoming bookings</h3>
+        <container class="user-bookings-container"></container>
+      </aside>
+    </section>
+
+  </section>
+  <!-- <img src="./images/turing-logo.png" alt="turing logo"> -->
   
   <!-- Do not include the scripts.js or class files here - it is done by the webpack server -->
   <script src="bundle.js"></script>
