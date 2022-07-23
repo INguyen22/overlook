@@ -55,12 +55,12 @@ header {
   width: 100vw;
 }
 
-.logout-button {
+.user-logout-button, .manager-logout-button {
   margin-left: 95%;
   background-color: #83f546;
 }
 
-.logout-button:hover {
+.user-logout-button:hover, .manager-logout-button:hover {
   background-color: #49d100;
   transform: scale(1.075);
   transition: 0.2s ease-in;
