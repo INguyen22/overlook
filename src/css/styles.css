@@ -193,18 +193,16 @@ aside {
 
 .manager-page {
    display: grid; 
-
-   grid-template-rows: 4rem auto 45px 1fr 1fr;
-   grid-template-columns: 16rem auto 1fr 1fr 1fr 1fr;
+   grid-template-rows: 6rem auto 45px 1fr 1fr;
+   grid-template-columns: 16rem 1fr 1fr 1fr 1fr 1fr;
    
    gap: 3px;
-   height: 100%;
-   
+   height: 100vh;
 }
   
 .manager-portal-header {
 
-   background-color: #9efda5; 
+   background-color: #edeec9; 
    grid-row-start: 1;
    grid-column-start: 1;
 
@@ -213,8 +211,11 @@ aside {
    
 }
 .hotel-stats {
-
-   background-color: #7989db; 
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   background-color: #dde7c7; 
    grid-row-start: 2;
    grid-column-start: 1;
 
@@ -223,8 +224,8 @@ aside {
    
 }
 .find-guest-content {
-
-   background-color: #bf6da5; 
+   background-color: #bfd8bd; 
+   padding-left: 43%;
    grid-row-start: 2;
    grid-column-start: 3;
 
@@ -233,8 +234,7 @@ aside {
    
 }
 .guest-check-in-info {
-
-   background-color: #adbc56; 
+   background-color: #98c9a3; 
    grid-row-start: 3;
    grid-column-start: 3;
 
@@ -243,8 +243,7 @@ aside {
    
 }
 .guest-bookings {
-
-   background-color: #d9cb76; 
+   background-color: #77bfa3; 
    grid-row-start: 3;
    grid-column-start: 5;
 
@@ -252,15 +251,6 @@ aside {
    grid-column-end: 7;
    
 }
-
-/* <div class="angry-grid">
-  <div id="item-0">&nbsp;</div>
-  <div id="item-1">&nbsp;</div>
-  <div id="item-2">&nbsp;</div>
-  <div id="item-3">&nbsp;</div>
-  <div id="item-4">&nbsp;</div>
-</div> */
-
 
 .hidden {
   display: none;
