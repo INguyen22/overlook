@@ -17,6 +17,11 @@ body {
   cursor: pointer;
 }
 
+.incorrect-login-text {
+  color: red;
+  font-size: 10px;
+}
+
 h1 {
   font-size: 50px;
   margin-bottom: 70px;
@@ -55,12 +60,12 @@ header {
   width: 100vw;
 }
 
-.logout-button {
+.user-logout-button, .manager-logout-button {
   margin-left: 95%;
   background-color: #83f546;
 }
 
-.logout-button:hover {
+.user-logout-button:hover, .manager-logout-button:hover {
   background-color: #49d100;
   transform: scale(1.075);
   transition: 0.2s ease-in;
@@ -187,7 +192,8 @@ aside {
   width: 100%;
 }
 
-.room-details-and-book-container:hover, .user-booking-details:hover {
+.room-details-and-book-container:hover, .user-booking-details:hover,
+.guest-room-details-and-book-container:hover, .guest-booking-details:hover {
   transform: scale(1.015);
   transition: 0.2s ease-in;
 }
@@ -198,11 +204,11 @@ aside {
   justify-content: center;
 }
 
-.book {
+.book, .manager-delete-booking {
   background-color: #9ae9f7;
 }
 
-.book:hover {
+.book:hover, .manager-delete-booking:hover {
   background-color: #46b9f5;
   transform: scale(1.075);
   transition: 0.2s ease-in;

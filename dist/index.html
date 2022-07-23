@@ -12,16 +12,17 @@
     <h1>Welcome to the Overlook Resort</h1>
     <form class="login-form">
       <label for="username">Username</label>
-      <input type="text" placeholder="Enter Username" required>
+      <input type="text" id="userLoginValue" placeholder="Enter Username" required>
       <label for="password">Password</label>
-      <input type="text" placeholder="Enter Password" required>
+      <input type="text" id="userPassLoginValue" placeholder="Enter Password" required>
       <button class="login-button">Login</button>
+      <p class="incorrect-login-text hidden">Username or Password is incorrect, please try again.</p>
     </form>
   </section>
   <!-- end of loginpage -->
   <section class="user-main-page hidden">
     <header>
-      <button class="logout-button">Log out <i class="arrow right"> </i></button>
+      <button class="user-logout-button">Log out <i class="arrow right"> </i></button>
       <section class="user-header">
         <h2 class="welcome-user">Welcome, user</h2>
         <h3 class="user-expenses">Your total expenses: $0.00</h3>
@@ -79,7 +80,7 @@
     <!-- end of user section -->
   <section class="manager-page hidden">
     <header class="manager-portal-header">
-      <button class="logout-button">Log out <i class="arrow right"> </i></button>
+      <button class="manager-logout-button">Log out <i class="arrow right"> </i></button>
       <h2 class="manager-portal">Manager Portal</h2>
     </header>
       <!-- <section class="manager-content"> -->
@@ -136,6 +137,7 @@
             <p class="room-spec2" id="room-bed-info">Bed size: size [x1]</p>
             <p class="room-spec2" id="room-view-info">view</p>
             <p class="room-spec2" id="rates2"> Cost: $0.00 per night</p>
+            <button class="manager-delete-booking">Delete</button>
           </section>
           <!-- remove when getting room data -->
         </container>
