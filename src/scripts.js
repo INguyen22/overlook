@@ -15,6 +15,7 @@ const loginPage = document.querySelector('.login-page')
 const username = document.querySelector('#userLoginValue')
 const password = document.querySelector('#userPassLoginValue')
 const loginButton = document.querySelector('.login-button')
+const incorrentLoginText = document.querySelector('.incorrect-login-text')
 //user-page querySelectors
 const userMainPage = document.querySelector('.user-main-page')
 const userLogOut = document.querySelector('.user-logout-button')
@@ -36,16 +37,21 @@ function login(event) {
         hide(loginPage)
         show(managerPage)
     }
+    else {
+        show(incorrentLoginText)
+    }
 }
 
 function userLogOutFunction() {
     hide(userMainPage)
     show(loginPage)
+    hide(incorrentLoginText)
 }
 
 function managerLogOutFunction() {
     hide(managerPage)
     show(loginPage)
+    hide(incorrentLoginText)
 }
 
 
