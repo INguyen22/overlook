@@ -3,6 +3,7 @@ body {
 }
 
 .login-page {
+    font-family: 'Cinzel', serif;
     background-image: url("../images/resort.png");
     background-size: cover;
     display: flex;
@@ -34,6 +35,7 @@ form {
 }
 
 .user-main-page {
+  font-family: 'Courgette', cursive;
   display: flex;
   flex-direction: column;
   background-color: white;
@@ -86,6 +88,13 @@ header {
   margin-left: 3%;
   color: white;
   text-decoration: underline;
+  font-size: 30px;
+}
+
+.guest-available-rooms {
+  margin-bottom: 0%;
+  margin-left: 3%;
+  font-size: 25px;
 }
 
 .search-button, .filter-room-input {
@@ -93,6 +102,7 @@ header {
 }
 
 .user-expenses {
+  font-size: 25px;
   margin-bottom: 0%;
   margin-left: 62%;
   color: white;
@@ -111,6 +121,12 @@ header {
   color: white;
 }
 
+.guest-booking-and-filtering {
+  display: flex;
+  margin-left: 3%;
+  font-size: 20px;
+}
+
 .rooms-container {
   display: flex;
   background-color: rgba(251, 251, 251, 0.3);
@@ -127,11 +143,20 @@ aside {
 }
 
 .bookings-header {
+  font-size: 30px;
   margin-right: 25%;
   color: white;
+  margin-bottom: 0%;
+  text-decoration: underline;
 }
 
-.user-bookings-container {
+.guest-bookings-header {
+  font-size: 25px;
+  margin-right: 12%;
+  margin-bottom: 0%;
+}
+
+.user-bookings-container, .guest-bookings-container {
   display: flex;
   background-color: rgba(251, 251, 251, 0.3);
   border-style: outset;
@@ -140,7 +165,7 @@ aside {
   margin-right: 3%;
 }
 
-.room-details-and-book-container {
+.room-details-and-book-container, .guest-room-details-and-book-container {
   display: flex;
   justify-content: space-around;
   background-color: rgba(255, 236, 128, 0.882);
@@ -150,7 +175,7 @@ aside {
   width: 100%;
 }
 
-.user-booking-details{
+.user-booking-details, .guest-booking-details{
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -194,7 +219,7 @@ aside {
 .manager-page {
    display: grid; 
    grid-template-rows: 6rem auto 45px 1fr 1fr;
-   grid-template-columns: 16rem 1fr 1fr 1fr 1fr 1fr;
+   grid-template-columns: 16rem 0.5fr 1fr 1fr 1fr 1fr;
    
    gap: 3px;
    height: 100vh;
@@ -216,6 +241,7 @@ aside {
    align-items: center;
    justify-content: center;
    background-color: #dde7c7; 
+   font-size: 30px;
    grid-row-start: 2;
    grid-column-start: 1;
 
@@ -225,6 +251,7 @@ aside {
 }
 .find-guest-content {
    background-color: #bfd8bd; 
+   font-size: 25px;
    padding-left: 43%;
    grid-row-start: 2;
    grid-column-start: 3;

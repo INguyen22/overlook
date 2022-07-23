@@ -4,10 +4,11 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Webpack Starter Kit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Courgette&display=swap" rel="stylesheet">
+  <title>Overlook</title>
 </head>
 <body>
-  <section class="login-page hidden">
+  <section class="login-page">
     <h1>Welcome to the Overlook Resort</h1>
     <form class="login-form">
       <label for="username">Username</label>
@@ -76,7 +77,7 @@
     </section>
   </section>
     <!-- end of user section -->
-  <section class="manager-page">
+  <section class="manager-page hidden">
     <header class="manager-portal-header">
       <button class="logout-button">Log out <i class="arrow right"> </i></button>
       <h2 class="manager-portal">Manager Portal</h2>
@@ -95,7 +96,7 @@
       <button type="submit" class="search-guest-button">search</button>
     </section>
     <section class="guest-check-in-info">
-      <section class="booking-and-filtering">
+      <section class="guest-booking-and-filtering">
         <label for="check-in">Check-In Date</label>
         <input type="date" data-date-format="MM DD YYYY"></input>
         <button class="search-button">search</button>
@@ -107,10 +108,10 @@
         </select>
         <input class="filter-room-input" type="submit">
       </section>
-        <h3 class="available-rooms">Available Rooms</h3>
+        <h3 class="guest-available-rooms">Available Rooms</h3>
         <container class="rooms-container">
           <!-- remove when getting room data -->
-          <section class="room-details-and-book-container">
+          <section class="guest-room-details-and-book-container">
             <section class="room-info">
               <p class="room-spec" id="room-type">Room Type: single</p>
               <p class="room-spec" id="room-detail-title">Room Details:</p>
@@ -126,10 +127,10 @@
         </container>
       </section>
       <aside class="guest-bookings">
-        <h3 class="bookings-header"> Guest Past and Upcoming bookings</h3>
-        <container class="user-bookings-container"> 
+        <h3 class="guest-bookings-header"> Guest Past and Upcoming bookings</h3>
+        <container class="guest-bookings-container"> 
           <!-- remove when getting room data -->
-          <section class="user-booking-details">
+          <section class="guest-booking-details">
             <p class="room-spec2" id="date-booked">Date Booked: mm/dd/yyyy</p>
             <p class="room-spec2" id="room-detail-title">Room Details:</p>
             <p class="room-spec2" id="room-bed-info">Bed size: size [x1]</p>
