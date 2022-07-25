@@ -1,12 +1,30 @@
 // This is the JavaScript entry file - your code begins here
 // Do not delete or rename this file ********
 
+//notes
+//depending on the roomnumber of the booking 
+//is what room type the booking has
+//ex: booking: {id: '5fwrgu4i7k55hl6tb', userID: 49, date: '2022/02/06', roomNumber: 5},
+//has room type of:{
+// bedSize: "queen",
+// bidet: true,
+// costPerNight: 340.17,
+// numBeds: 2,
+// number: 5,
+// roomType: "single room"
+// },
+
 // An example of how you tell webpack to use a CSS (SCSS) file
 import './css/styles.css';
 
 // An example of how you tell webpack to use an image (also need to link to it in the index.html)
 import './images/turing-logo.png'
 
+//imported classes
+import Bookings from './classes/bookings.js'
+import Rooms from './classes/rooms.js'
+import User from './classes/user.js'
+import Manager from './classes/manager.js'
 
 console.log('This is the JavaScript entry file - your code begins here.');
 
