@@ -22,6 +22,7 @@ class User {
             let total = sum + room.costPerNight
             return total
         }, 0)
+        this.expenses = totalCost
         return totalCost
     }
 
