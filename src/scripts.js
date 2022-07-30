@@ -6,6 +6,7 @@
 //is what room type the booking has
 //ex: booking: {id: '5fwrgu4i7k55hl6tb', userID: 49, date: '2022/02/06', roomNumber: 5},
 //has room type of:{
+// id: '5fwrgu4i7k55hl6tb'
 // bedSize: "queen",
 // bidet: true,
 // costPerNight: 340.17,
@@ -36,11 +37,14 @@ const incorrentLoginText = document.querySelector('.incorrect-login-text')
 //user-page querySelectors
 const userMainPage = document.querySelector('.user-main-page')
 const userLogOut = document.querySelector('.user-logout-button')
+const welcomeUserMessage = document.querySelector('.welcome-user')
+const userExpenseMessage = document.querySelector('.user-expenses')
 //manager-page querySelectors
 const managerPage = document.querySelector('.manager-page')
 const managerLogOut = document.querySelector('.manager-logout-button')
 //global variables
 let allCustomersData;
+let clients = []
 let customerInfo;
 let allRoomsData;
 let allBookingsData;
@@ -57,7 +61,11 @@ managerLogOut.addEventListener('click', managerLogOutFunction)
 function allCustomersFetch() {
     fetch(`http://localhost:3001/api/v1/customers`)
     .then(response => response.json())
-    .then(data => allCustomersData = data)
+    .then(data => {
+        allCustomersData = data.customers
+        //console.log(allCustomersData)
+        clientGenerator()
+    })
 }
 
 function singleCustomerFetch() {
@@ -69,34 +77,54 @@ function singleCustomerFetch() {
 function roomsFetch() {
     fetch(`http://localhost:3001/api/v1/rooms`)
     .then(response => response.json())
-    .then(data => allRoomsData = data)
+    .then(data => {
+        allRoomsData = data.rooms
+        //console.log('rooms data', allRoomsData)
+    })
 }
 
 function bookingsFetch() {
     fetch(`http://localhost:3001/api/v1/bookings`)
     .then(response => response.json())
-    .then(data => allBookingsData = data)
+    .then(data => {
+        allBookingsData = data.bookings
+        console.log('bookings data', allBookingsData)
+    })
 }
 
 //event handlers
-function customerGenerator() {
-    const customerInstance = allCustomersData.forEach(customer => {
-        customerInfo = new User(customer)
+function clientGenerator() {
+    let customer = allCustomersData.forEach(customer => {
+        clients.push(new User(customer, allBookingsData, allRoomsData))
+       //console.log(clients)
     })
 }
+
+function changeBookingData(bookingsData, roomsData) {
+    return changeBookingData = clients.forEach(client => {
+        client.determineBookingRoomType(bookingsData, roomsData)
+    })
+}
+
 function login(event) {
     event.preventDefault()
-    if(username.value === "customer50" && password.value === "overlook2021") {
-        hide(loginPage)
-        show(userMainPage)
-    }
-    else if(username.value === "manager" && password.value === "overlook2021") {
-        hide(loginPage)
-        show(managerPage)
-    }
-    else {
-        show(incorrentLoginText)
-    }
+    return clients.filter(client => {
+        if(client.username === username.value && password.value === "overlook2021") {
+            hide(loginPage)
+            show(userMainPage)
+            displayClientDetails(client)
+            changeBookingData(allBookingsData, allRoomsData)
+            console.log('client', client)
+            return client
+        }
+        else if(username.value === "manager" && password.value === "overlook2021") {
+            hide(loginPage)
+            show(managerPage)
+        }
+        else {
+            show(incorrentLoginText)
+        }
+    })
 }
 
 function userLogOutFunction() {
@@ -111,6 +139,10 @@ function managerLogOutFunction() {
     hide(incorrentLoginText)
 }
 
+function displayClientDetails(client) {
+    welcomeUserMessage.innerText = `Welcome, ${client.name}`
+    userExpenseMessage.innerText = `Your total expenses: $${client.expenses}`
+}
 
 function show(element) {
     element.classList.remove('hidden')
