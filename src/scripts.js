@@ -39,6 +39,9 @@ const userMainPage = document.querySelector('.user-main-page')
 const userLogOut = document.querySelector('.user-logout-button')
 const welcomeUserMessage = document.querySelector('.welcome-user')
 const userExpenseMessage = document.querySelector('.user-expenses')
+const calenderInput = document.querySelector('#calenderInput')
+const searchDateButton = document.querySelector('.search-button')
+const availableRoomsContainer = document.querySelector('.rooms-container')
 //manager-page querySelectors
 const managerPage = document.querySelector('.manager-page')
 const managerLogOut = document.querySelector('.manager-logout-button')
@@ -46,6 +49,7 @@ const managerLogOut = document.querySelector('.manager-logout-button')
 let allCustomersData;
 let clients = []
 let customerInfo;
+let currentClient;
 let allRoomsData;
 let allBookingsData;
 //event listeners
@@ -57,6 +61,7 @@ window.addEventListener('load', function() {
 loginButton.addEventListener('click', login)
 userLogOut.addEventListener('click', userLogOutFunction)
 managerLogOut.addEventListener('click', managerLogOutFunction)
+searchDateButton.addEventListener('click', showAvailableRoomsByDate)
 //fetch functions
 function allCustomersFetch() {
     fetch(`http://localhost:3001/api/v1/customers`)
@@ -88,7 +93,7 @@ function bookingsFetch() {
     .then(response => response.json())
     .then(data => {
         allBookingsData = data.bookings
-        console.log('bookings data', allBookingsData)
+        //console.log('bookings data', allBookingsData)
     })
 }
 
@@ -108,13 +113,15 @@ function changeBookingData(bookingsData, roomsData) {
 
 function login(event) {
     event.preventDefault()
-    return clients.filter(client => {
+    return clients.find(client => {
         if(client.username === username.value && password.value === "overlook2021") {
             hide(loginPage)
             show(userMainPage)
             displayClientDetails(client)
             changeBookingData(allBookingsData, allRoomsData)
             console.log('client', client)
+            currentClient = client
+            //console.log('currentClient', currentClient.bookingRoomDetails)
             return client
         }
         else if(username.value === "manager" && password.value === "overlook2021") {
@@ -124,6 +131,29 @@ function login(event) {
         else {
             show(incorrentLoginText)
         }
+    })
+}
+
+function showAvailableRoomsByDate() {
+    console.log('before', calenderInput.value)
+    let dateInput = calenderInput.value.split("-")
+    let newDateInput = dateInput.join("/")
+    console.log('after', newDateInput)
+    let availableRooms = currentClient.filterBookingsByDate(newDateInput)
+    availableRoomsContainer.innerHTML = ''
+    availableRooms.forEach(availableRoom => {
+        availableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
+        <section class="room-info">
+          <p class="room-spec" id="${availableRoom.bookingId}">Room Type: ${availableRoom.roomType}</p>
+          <p class="room-spec" id="room-detail-title">Room Details:</p>
+          <p class="room-spec" id="room-bed-info">Bed size: ${availableRoom.bedSize} [x${availableRoom.numBeds}]</p>
+          <p class="room-spec" id="room-date-info">Available Date: ${availableRoom.date}</p>
+        </section>
+        <section class="rates-and-book">
+          <p class="room-spec" id="rates">$${availableRoom.costPerNight} per night</p>
+          <button class="book" id='${availableRoom.bookingId}'>Book</button>
+        </section>
+      </section>`
     })
 }
 
