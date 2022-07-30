@@ -12,27 +12,27 @@ describe('bookings', () => {
         booking1 = new Bookings(bookingSample)
     })
 
-    it.skip('should be a function', () => {
+    it('should be a function', () => {
         expect(Bookings).to.be.a('function')
     })
 
-    it.skip('should be an instance of Bookings', () => {
+    it('should be an instance of Bookings', () => {
         expect(booking1).to.be.an.instanceof(Bookings)
     })
 
-    it.skip('should have an id', () => {
+    it('should have an id', () => {
         expect(booking1.id).to.equal('5fwrgu4i7k55hl6sz')
     })
 
-    it.skip('should have a user id', () => {
+    it('should have a user id', () => {
         expect(booking1.userID).to.equal(9)
     })
 
-    it.skip('should have a booking date', () => {
+    it('should have a booking date', () => {
         expect(booking1.date).to.equal('2022/04/22')
     })
 
-    it.skip('should have a room number', () => {
+    it('should have a room number', () => {
         expect(booking1.bookingRoomNumber).to.equal(15)
     })
 })

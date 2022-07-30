@@ -228,27 +228,27 @@ describe('user', () => {
         user1 = new User(userSample)
     })
 
-    it.skip('should be a function', () => {
+    it('should be a function', () => {
         expect(User).to.be.a('function')
     })
 
-    it.skip('should be an instance of Bookings', () => {
+    it('should be an instance of User', () => {
         expect(user1).to.be.an.instanceof(User)
     })
 
-    it.skip('should have a id', () => {
+    it('should have a id', () => {
         expect(user1.id).to.equal(1)
     })
 
-    it.skip('should have a name', () => {
+    it('should have a name', () => {
         expect(user1.name).to.equal('Leatha Ullrich')
     })
 
-    it.skip('should have a empty array as default for booking room details', () => {
-        expect(user1.bookingRoomDetails).to.equal([])
+    it('should have a empty array as default for booking room details', () => {
+        expect(user1.bookingRoomDetails).to.deep.equal([])
     })
 
-    it.skip('should clarify booking room details', () => {
+    it('should clarify booking room details', () => {
         user1.determineBookingRoomType(bookingsData, roomsData)
         expect(user1.bookingRoomDetails[0]).to.deep.equal({
             bookingId: '5fwrgu4i7k55hl6sz',
@@ -261,18 +261,18 @@ describe('user', () => {
         })
     })
 
-    it.skip('should start out with no rooms booked', () => {
-        expect(user1.roomsBooked).to.equal([])
+    it('should start out with no rooms booked', () => {
+        expect(user1.roomsBooked).to.deep.equal([])
     })
 
-    it.skip('should start out with no expenses', () => {
+    it('should start out with no expenses', () => {
         expect(user1.expenses).to.equal(0)
     })
 
-    it.skip('should be able to book a room', () => {
+    it('should be able to book a room', () => {
         user1.determineBookingRoomType(bookingsData, roomsData)
         user1.bookRoom('5fwrgu4i7k55hl6sz')
-        expect(user1.roomsBooked[0]).to.equal({
+        expect(user1.roomsBooked[0]).to.deep.equal({
             bookingId: '5fwrgu4i7k55hl6sz',
             roomType: 'residential suite',
             bidet: false,
@@ -283,7 +283,8 @@ describe('user', () => {
         })
     })
 
-    it.skip('should be able to book multiple rooms', () => {
+    it('should be able to book multiple rooms', () => {
+        user1.determineBookingRoomType(bookingsData, roomsData)
         user1.bookRoom('5fwrgu4i7k55hl6sz')
         user1.bookRoom('5fwrgu4i7k55hl6t5')
         expect(user1.roomsBooked).to.deep.equal([
@@ -308,14 +309,18 @@ describe('user', () => {
         )
     })
 
-    it.skip('should be able to calculate the total of expenses for the booked rooms', () => {
+    it('should be able to calculate the total of expenses for the booked rooms', () => {
+        user1.determineBookingRoomType(bookingsData, roomsData)
+        user1.bookRoom('5fwrgu4i7k55hl6sz')
+        user1.bookRoom('5fwrgu4i7k55hl6t5')
         user1.userExpenseTotal()
         expect(user1.expenses).to.equal(621.8)
     })
 
-    it.skip('should filter bookings by date', () => {
+    it('should filter bookings by date', () => {
+        user1.determineBookingRoomType(bookingsData, roomsData)
         user1.filterBookingsByDate('2022/01/24')
-        expect(user1.bookingRoomDetails).to.equal([
+        expect(user1.bookingRoomDetails).to.deep.equal([
             {
                 bookingId: '5fwrgu4i7k55hl6t5',
                 roomType: 'suite',
@@ -328,9 +333,10 @@ describe('user', () => {
         ])
     })
 
-    it.skip('should filter bookings by room type', () => {
+    it('should filter bookings by room type', () => {
+        user1.determineBookingRoomType(bookingsData, roomsData)
         user1.filterRoomByRoomType('residential suite')
-        expect(user1.bookingRoomDetails).to.equal([
+        expect(user1.bookingRoomDetails).to.deep.equal([
             {
             bookingId: '5fwrgu4i7k55hl6sz',
             roomType: 'residential suite',
@@ -339,6 +345,24 @@ describe('user', () => {
             numBeds: 1,
             costPerNight: 294.56,
             date: '2022/04/22'
+            },
+            {
+            bookingId: "5fwrgu4i7k55hl6t9",
+            roomType: "residential suite",
+            bidet: false,
+            bedSize: "twin",
+            numBeds: 1,
+            costPerNight: 457.88,
+            date: "2022/02/14",
+            },
+            {
+            bookingId: "5fwrgu4i7k55hl6td",
+            roomType: "residential suite",
+            bidet: false,
+            bedSize: "queen",
+            numBeds: 1,
+            costPerNight: 343.95,
+            date: "2022/01/31",
             }
         ])
     })

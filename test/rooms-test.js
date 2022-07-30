@@ -16,35 +16,35 @@ describe('rooms', () => {
         room1 = new Rooms(roomSample)
     })
 
-    it.skip('should be a function', () => {
+    it('should be a function', () => {
         expect(Rooms).to.be.a('function')
     })
 
-    it.skip('should be an instance of Bookings', () => {
+    it('should be an instance of Bookings', () => {
         expect(room1).to.be.an.instanceof(Rooms)
     })
 
-    it.skip('should have a bed size', () => {
+    it('should have a bed size', () => {
         expect(room1.bedSize).to.equal("queen")
     })
 
-    it.skip('should clarify if the room has a bidet', () => {
+    it('should clarify if the room has a bidet', () => {
         expect(room1.hasBidet).to.equal(true)
     })
 
-    it.skip('should have a cost per night', () => {
+    it('should have a cost per night', () => {
         expect(room1.costPerNight).to.equal(358.4)
     })
 
-    it.skip('should have a number of beds', () => {
+    it('should have a number of beds', () => {
         expect(room1.numBeds).to.equal(1)
     })
 
-    it.skip('should have a room number', () => {
+    it('should have a room number', () => {
         expect(room1.roomNumber).to.equal(1)
     })
 
-    it.skip('should have a type of room', () => {
+    it('should have a type of room', () => {
         expect(room1.roomType).to.equal("residential suite")
     })
 })

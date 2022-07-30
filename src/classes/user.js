@@ -2,19 +2,21 @@ class User {
     constructor(userDetails) {
         this.id = userDetails.id
         this.name = userDetails.name
-        this.bookingRoomDetails = bookingRoomType
+        this.bookingRoomDetails = []
         this.roomsBooked = []
         this.expenses = 0
     }
 
     filterBookingsByDate(date) {
-        const filterRoomDate = roomDetails.filter(room => room.date === date)
-        return filterRoomDate
+        return this.bookingRoomDetails = this.bookingRoomDetails.filter(room => 
+            room.date === date
+        )
     }
 
     filterRoomByRoomType(roomType) {
-        const filterRoomType = roomDetails.filter(room => room.roomType === roomType)
-        return filterRoomType
+        return this.bookingRoomDetails = this.bookingRoomDetails.filter(room => 
+            room.roomType === roomType
+        )
     }
 
     userExpenseTotal() {
@@ -27,7 +29,7 @@ class User {
     }
 
     determineBookingRoomType(bookingsData, roomsData) {
-        return bookingRoomType = bookingsData.reduce((array, booking) => {
+        const bookingRoomType = bookingsData.reduce((array, booking) => {
             roomsData.forEach(room => {
                 if(room.number === booking.roomNumber) {
                     const specificBookingRoomDetail = {
@@ -44,16 +46,17 @@ class User {
             })
             return array
         }, [])
-        // this.bookingRoomDetails = bookingRoomType
-        // return bookingRoomType
+        this.bookingRoomDetails = bookingRoomType
+        return bookingRoomType
     }
 
     bookRoom(roomId) {
-        return this.bookingRoomDetails.forEach(bookingRoom => {
-            if(bookingRoom.id === roomId) {
+        const bookRoom = this.bookingRoomDetails.forEach(bookingRoom => {
+            if(bookingRoom.bookingId === roomId) {
                 this.roomsBooked.push(bookingRoom)
             }
         })
+        return this.roomsBooked
     }
 }
 
