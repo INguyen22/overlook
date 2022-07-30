@@ -240,6 +240,10 @@ describe('user', () => {
         expect(user1.id).to.equal(1)
     })
 
+    it('should have a password', () => {
+        expect(user1.userPassword).to.equal(`customer1`)
+    })
+
     it('should have a name', () => {
         expect(user1.name).to.equal('Leatha Ullrich')
     })

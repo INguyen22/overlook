@@ -19,7 +19,6 @@ import './css/styles.css';
 
 // An example of how you tell webpack to use an image (also need to link to it in the index.html)
 import './images/turing-logo.png'
-
 //imported classes
 import Bookings from './classes/bookings.js'
 import Rooms from './classes/rooms.js'
@@ -40,11 +39,51 @@ const userLogOut = document.querySelector('.user-logout-button')
 //manager-page querySelectors
 const managerPage = document.querySelector('.manager-page')
 const managerLogOut = document.querySelector('.manager-logout-button')
+//global variables
+let allCustomersData;
+let customerInfo;
+let allRoomsData;
+let allBookingsData;
 //event listeners
+window.addEventListener('load', function() {
+    allCustomersFetch()
+    roomsFetch()
+    bookingsFetch()
+})
 loginButton.addEventListener('click', login)
 userLogOut.addEventListener('click', userLogOutFunction)
 managerLogOut.addEventListener('click', managerLogOutFunction)
+//fetch functions
+function allCustomersFetch() {
+    fetch(`http://localhost:3001/api/v1/customers`)
+    .then(response => response.json())
+    .then(data => allCustomersData = data)
+}
+
+function singleCustomerFetch() {
+    fetch(`http://localhost:3001/api/v1/customers/<id>`)
+    .then(response => response.json())
+    .then(data => console.log(data))
+}
+
+function roomsFetch() {
+    fetch(`http://localhost:3001/api/v1/rooms`)
+    .then(response => response.json())
+    .then(data => allRoomsData = data)
+}
+
+function bookingsFetch() {
+    fetch(`http://localhost:3001/api/v1/bookings`)
+    .then(response => response.json())
+    .then(data => allBookingsData = data)
+}
+
 //event handlers
+function customerGenerator() {
+    const customerInstance = allCustomersData.forEach(customer => {
+        customerInfo = new User(customer)
+    })
+}
 function login(event) {
     event.preventDefault()
     if(username.value === "customer50" && password.value === "overlook2021") {
