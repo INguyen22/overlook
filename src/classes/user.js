@@ -8,13 +8,15 @@ class User {
     }
 
     filterBookingsByDate(date) {
-        const filterRoomDate = roomDetails.filter(room => room.date === date)
-        return filterRoomDate
+        return this.bookingRoomDetails = this.bookingRoomDetails.filter(room => 
+            room.date === date
+        )
     }
 
     filterRoomByRoomType(roomType) {
-        const filterRoomType = roomDetails.filter(room => room.roomType === roomType)
-        return filterRoomType
+        return this.bookingRoomDetails = this.bookingRoomDetails.filter(room => 
+            room.roomType === roomType
+        )
     }
 
     userExpenseTotal() {
@@ -22,6 +24,7 @@ class User {
             let total = sum + room.costPerNight
             return total
         }, 0)
+        this.expenses = totalCost
         return totalCost
     }
 
@@ -30,6 +33,7 @@ class User {
             roomsData.forEach(room => {
                 if(room.number === booking.roomNumber) {
                     const specificBookingRoomDetail = {
+                        bookingId: booking.id,
                         roomType: room.roomType,
                         bidet: room.bidet,
                         bedSize: room.bedSize,
@@ -45,6 +49,15 @@ class User {
         this.bookingRoomDetails = bookingRoomType
         return bookingRoomType
     }
+
+    bookRoom(roomId) {
+        const bookRoom = this.bookingRoomDetails.forEach(bookingRoom => {
+            if(bookingRoom.bookingId === roomId) {
+                this.roomsBooked.push(bookingRoom)
+            }
+        })
+        return this.roomsBooked
+    }
 }
 
 export default User
@@ -52,6 +65,7 @@ export default User
 // determineBookingRoomType(bookingsData, roomsData)
 // [
 //     {
+//       bookingId: '5fwrgu4i7k55hl6sz',
 //       roomType: 'residential suite',
 //       bidet: false,
 //       bedSize: 'full',
@@ -60,6 +74,7 @@ export default User
 //       date: '2022/04/22'
 //     },
 //     {
+//       bookingId: '5fwrgu4i7k55hl6t5',
 //       roomType: 'suite',
 //       bidet: false,
 //       bedSize: 'queen',
@@ -68,6 +83,7 @@ export default User
 //       date: '2022/01/24'
 //     },
 //     {
+//       bookingId: '5fwrgu4i7k55hl6t6',
 //       roomType: 'single room',
 //       bidet: false,
 //       bedSize: 'twin',
@@ -76,6 +92,7 @@ export default User
 //       date: '2022/01/10'
 //     },
 //     {
+//       bookingId: '5fwrgu4i7k55hl6t7',
 //       roomType: 'single room',
 //       bidet: false,
 //       bedSize: 'queen',
@@ -84,6 +101,7 @@ export default User
 //       date: '2022/02/16'
 //     },
 //     {
+//       bookingId: '5fwrgu4i7k55hl6t8',
 //       roomType: 'single room',
 //       bidet: false,
 //       bedSize: 'twin',
@@ -92,6 +110,7 @@ export default User
 //       date: '2022/02/05'
 //     },
 //     {
+//       bookingId: '5fwrgu4i7k55hl6t9',
 //       roomType: 'residential suite',
 //       bidet: false,
 //       bedSize: 'twin',
@@ -100,6 +119,7 @@ export default User
 //       date: '2022/02/14'
 //     },
 //     {
+//       bookingId: '5fwrgu4i7k55hl6ta',
 //       roomType: 'single room',
 //       bidet: true,
 //       bedSize: 'queen',
@@ -108,6 +128,7 @@ export default User
 //       date: '2022/01/11'
 //     },
 //     {
+//       bookingId: '5fwrgu4i7k55hl6tb',
 //       roomType: 'single room',
 //       bidet: true,
 //       bedSize: 'queen',
@@ -116,6 +137,7 @@ export default User
 //       date: '2022/02/06'
 //     },
 //     {
+//       bookingId: '5fwrgu4i7k55hl6tc',
 //       roomType: 'single room',
 //       bidet: false,
 //       bedSize: 'queen',
@@ -124,6 +146,7 @@ export default User
 //       date: '2022/01/30'
 //     },
 //     {
+//       bookingId: '5fwrgu4i7k55hl6td',
 //       roomType: 'residential suite',
 //       bidet: false,
 //       bedSize: 'queen',
@@ -132,6 +155,7 @@ export default User
 //       date: '2022/01/31'
 //     },
 //     {
+//       bookingId: '5fwrgu4i7k55hl6te',
 //       roomType: 'junior suite',
 //       bidet: false,
 //       bedSize: 'king',
