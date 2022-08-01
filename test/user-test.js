@@ -256,6 +256,7 @@ describe('user', () => {
         user1.determineBookingRoomType(bookingsData, roomsData)
         expect(user1.bookingRoomDetails[0]).to.deep.equal({
             bookingId: '5fwrgu4i7k55hl6sz',
+            userId: 9,
             roomType: 'residential suite',
             bidet: false,
             bedSize: 'full',
@@ -269,6 +270,23 @@ describe('user', () => {
         expect(user1.roomsBooked).to.deep.equal([])
     })
 
+    it('should have rooms booked from booking data', () => {
+        user1.determineBookingRoomType(bookingsData, roomsData)
+        user1.determineUserPastBookings()
+        expect(user1.roomsBooked[0]).to.deep.equal(
+                {
+                  bookingId: '5fwrgu4i7k55hl6t8',
+                  userId: 1,
+                  roomType: 'single room',
+                  bidet: false,
+                  bedSize: 'twin',
+                  numBeds: 2,
+                  costPerNight: 172.09,
+                  date: '2022/02/05'
+                }
+            )
+    })
+
     it('should start out with no expenses', () => {
         expect(user1.expenses).to.equal(0)
     })
@@ -278,6 +296,7 @@ describe('user', () => {
         user1.bookRoom('5fwrgu4i7k55hl6sz')
         expect(user1.roomsBooked[0]).to.deep.equal({
             bookingId: '5fwrgu4i7k55hl6sz',
+            userId: 9,
             roomType: 'residential suite',
             bidet: false,
             bedSize: 'full',
@@ -294,6 +313,7 @@ describe('user', () => {
         expect(user1.roomsBooked).to.deep.equal([
             {
             bookingId: '5fwrgu4i7k55hl6sz',
+            userId: 9,
             roomType: 'residential suite',
             bidet: false,
             bedSize: 'full',
@@ -303,6 +323,7 @@ describe('user', () => {
             },
             {
             bookingId: '5fwrgu4i7k55hl6t5',
+            userId: 43,
             roomType: 'suite',
             bidet: false,
             bedSize: 'queen',
@@ -327,6 +348,7 @@ describe('user', () => {
         expect(user1.bookingRoomDetails).to.deep.equal([
             {
                 bookingId: '5fwrgu4i7k55hl6t5',
+                userId: 43,
                 roomType: 'suite',
                 bidet: false,
                 bedSize: 'queen',
@@ -343,6 +365,7 @@ describe('user', () => {
         expect(user1.bookingRoomDetails).to.deep.equal([
             {
             bookingId: '5fwrgu4i7k55hl6sz',
+            userId: 9,
             roomType: 'residential suite',
             bidet: false,
             bedSize: 'full',
@@ -352,6 +375,7 @@ describe('user', () => {
             },
             {
             bookingId: "5fwrgu4i7k55hl6t9",
+            userId: 38,
             roomType: "residential suite",
             bidet: false,
             bedSize: "twin",
@@ -361,6 +385,7 @@ describe('user', () => {
             },
             {
             bookingId: "5fwrgu4i7k55hl6td",
+            userId: 27,
             roomType: "residential suite",
             bidet: false,
             bedSize: "queen",
