@@ -42,6 +42,7 @@ const userExpenseMessage = document.querySelector('.user-expenses')
 const calenderInput = document.querySelector('#calenderInput')
 const searchDateButton = document.querySelector('.search-button')
 const availableRoomsContainer = document.querySelector('.rooms-container')
+const pastAndUpcomingBookingContainer = document.querySelector(".user-bookings-container")
 //manager-page querySelectors
 const managerPage = document.querySelector('.manager-page')
 const managerLogOut = document.querySelector('.manager-logout-button')
@@ -121,6 +122,7 @@ function login(event) {
             changeBookingData(allBookingsData, allRoomsData)
             console.log('client', client)
             currentClient = client
+            showPastBookings()
             //console.log('currentClient', currentClient.bookingRoomDetails)
             return client
         }
@@ -135,10 +137,10 @@ function login(event) {
 }
 
 function showAvailableRoomsByDate() {
-    console.log('before', calenderInput.value)
+    //console.log('before', calenderInput.value)
     let dateInput = calenderInput.value.split("-")
     let newDateInput = dateInput.join("/")
-    console.log('after', newDateInput)
+    //console.log('after', newDateInput)
     let availableRooms = currentClient.filterBookingsByDate(newDateInput)
     availableRoomsContainer.innerHTML = ''
     availableRooms.forEach(availableRoom => {
@@ -156,6 +158,22 @@ function showAvailableRoomsByDate() {
       </section>`
     })
 }
+
+function showPastBookings() {
+    let clientBookedRooms = currentClient.determineUserPastBookings()
+    pastAndUpcomingBookingContainer.innerHTML = ''
+    console.log('clientBookedRooms', currentClient.bookingRoomDetails)
+    currentClient.roomsBooked.forEach(bookedRoom => {
+        pastAndUpcomingBookingContainer.innerHTML += `<section class="user-booking-details">
+        <p class="room-spec2" id="date-booked">Date Booked: ${bookedRoom.date}</p>
+        <p class="room-spec2" id="room-detail-title">Room Details:</p>
+        <p class="room-spec2" id="room-bed-info">Bed size: ${bookedRoom.bedSize} [x${bookedRoom.numBeds}]</p>
+        <p class="room-spec2" id="rates2"> Cost: $${bookedRoom.costPerNight} per night</p>
+      </section>`
+    })
+}
+
+
 
 function userLogOutFunction() {
     hide(userMainPage)
