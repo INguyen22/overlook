@@ -66,6 +66,7 @@ userLogOut.addEventListener('click', userLogOutFunction)
 managerLogOut.addEventListener('click', managerLogOutFunction)
 searchDateButton.addEventListener('click', showAvailableRoomsByDate)
 roomTypeSubmitButton.addEventListener('click', showAvailableRoomsByRoomType)
+userMainPage.addEventListener('click', bookRoom)
 //fetch functions
 function allCustomersFetch() {
     fetch(`http://localhost:3001/api/v1/customers`)
@@ -165,7 +166,7 @@ function showAvailableRoomsByDate() {
 
 function showAvailableRoomsByRoomType() {
     let availableRooms = currentClient.filterRoomByRoomType(roomTypeSelection.options[roomTypeSelection.selectedIndex].text)
-    console.log(availableRooms)
+    console.log('available rooms', availableRooms)
     availableRoomsContainer.innerHTML = ''
     availableRooms.forEach(availableRoom => {
         availableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
@@ -194,6 +195,16 @@ function displayRoomTypeOptions() {
         <option disabled hidden selected>Room Type</option>
         <option value="${roomType}">${roomType}</option>`
     })
+}
+
+function bookRoom(event) {
+    let booking = currentClient.bookRoom(event.target.id)
+    console.log('booking', booking)
+    console.log('client booking', currentClient.bookingRoomDetails)
+    //can add to the past and upcomming
+    //can remove from booking options
+    //chnaging data around 
+    
 }
 
 function showPastBookings() {

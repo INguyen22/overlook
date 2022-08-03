@@ -66,6 +66,7 @@ class User {
         const bookRoom = this.bookingRoomDetails.forEach(bookingRoom => {
             if(bookingRoom.bookingId === roomId) {
                 this.roomsBooked.push(bookingRoom)
+                this.bookingRoomDetails.splice(this.bookingRoomDetails.indexOf(bookingRoom), 1)
             }
         })
         return this.roomsBooked
