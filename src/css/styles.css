@@ -137,9 +137,10 @@ header {
   flex-direction: column;
   background-color: rgba(251, 251, 251, 0.3);
   border-style: outset;
-  height: 73%;
+  height: 93%;
   margin-top: 5px;
   margin-left: 3%;
+  overflow-y: auto;
 }
 
 aside {
@@ -164,11 +165,13 @@ aside {
 
 .user-bookings-container, .guest-bookings-container {
   display: flex;
+  flex-direction: column;
   background-color: rgba(251, 251, 251, 0.3);
   border-style: outset;
-  height: 79.5%;
+  height: 691px;
   width: 77%;
   margin-right: 3%;
+  overflow-y: auto;
 }
 
 .room-details-and-book-container, .guest-room-details-and-book-container {
@@ -177,6 +180,7 @@ aside {
   background-color: rgba(255, 236, 128, 0.882);
   border-style: solid;
   border-radius: 20px;
+  margin-bottom: 10px;
   height: 25%;
   width: 100%;
 }
@@ -189,6 +193,7 @@ aside {
   background-color: rgba(57, 245, 182, 0.884);
   border-style: solid;
   border-radius: 20px;
+  margin-bottom: 10px;
   height: 17%;
   width: 100%;
 }
@@ -218,6 +223,10 @@ aside {
 
 .room-spec2 {
   margin: 0%;
+}
+
+.user-check-in-info {
+  height: 70vh;
 }
 
 /* manager-page-specs */
