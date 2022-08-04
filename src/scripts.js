@@ -133,18 +133,27 @@ function clientGenerator() {
 }
 
 function changeBookingData(bookingsData, roomsData) {
-    return changeBookingData = clients.forEach(client => {
+    const changeBookingDetails = clients.forEach(client => {
         client.determineBookingRoomType(bookingsData, roomsData)
     })
+    return changeBookingDetails
 }
 
+
+
 function login(event) {
+    console.log('hi')
     event.preventDefault()
     return clients.find(client => {
         if(client.username === username.value && password.value === "overlook2021") {
+            console.log('client', client)
             hide(loginPage)
             show(userMainPage)
             displayClientDetails(client)
+            // bookingsFetch().then(data => {
+            //     console.log(data)
+            //     changeBookingData(data, allRoomsData)
+            // })
             changeBookingData(allBookingsData, allRoomsData)
             currentClient = client
             showPastBookings()
@@ -268,11 +277,12 @@ function bookRoom(event) {
 }
 
 function showPastBookings() {
+    console.log('new client', currentClient)
     let clientBookedRooms = currentClient.determineUserPastBookings()
     pastAndUpcomingBookingContainer.innerHTML = ''
     // console.log('clientBookedRooms', currentClient.bookingRoomDetails)
     currentClient.roomsBooked.forEach(bookedRoom => {
-        pastAndUpcomingBookingContainer.innerHTML += `<section class="user-booking-details">
+        pastAndUpcomingBookingContainer.innerHTML += `<section tabindex="0" class="user-booking-details">
         <p class="room-spec2" id="date-booked">Date Booked: ${bookedRoom.date}</p>
         <p class="room-spec2" id="room-detail-title">Room Details:</p>
         <p class="room-spec2" id="room-bed-info">Bed size: ${bookedRoom.bedSize} [x${bookedRoom.numBeds}]</p>
@@ -292,9 +302,12 @@ function userLogOutFunction() {
     hide(userMainPage)
     show(loginPage)
     hide(incorrentLoginText)
-    currentClient = ''
-    allRoomsData = ''
-    allBookingsData = ''
+    clients = []
+    availableRoomsContainer.innerHTML = ''
+    pastAndUpcomingBookingContainer.innerHTML = ''
+    allCustomersFetch()
+    roomsFetch()
+    bookingsFetch()
 }
 
 function managerLogOutFunction() {
