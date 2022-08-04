@@ -61,7 +61,7 @@ window.addEventListener('load', function() {
 })
 //loginButton.addEventListener('click', login)
 //userLogOut.addEventListener('click', userLogOutFunction)
-managerLogOut.addEventListener('click', managerLogOutFunction)
+//managerLogOut.addEventListener('click', managerLogOutFunction)
 searchDateButton.addEventListener('click', showAvailableRoomsByDate)
 roomTypeSubmitButton.addEventListener('click', showAvailableRoomsByRoomType)
 userMainPage.addEventListener('click', bookRoom)
@@ -101,7 +101,8 @@ function bookingsFetch() {
     .then(response => response.json())
     .then(data => {
         allBookingsData = data.bookings
-        changeBookingData(allBookingsData, allRoomsData)
+        showPastBookings()
+        //changeBookingData(allBookingsData, allRoomsData)
         //console.log('bookings data', allBookingsData)
     })
 }
@@ -132,43 +133,12 @@ function addBookingsPost() {
     })
 }
 
-//event handlers
-// function clientGenerator() {
-//     let customer = allCustomersData.forEach(customer => {
-//         clients.push(new User(customer))
-//        //console.log(clients)
-//     })
-// }
-
 function changeBookingData(bookingsData, roomsData) {
     let clientBookingData =  currentClient.determineBookingRoomType(bookingsData, roomsData)
-    showPastBookings()
+    // showPastBookings()
     console.log('og rooms booked', currentClient.roomsBooked)
     return clientBookingData
 }
-
-// function login(event) {
-//     event.preventDefault()
-//     return clients.find(client => {
-//         if(client.username === username.value && password.value === "overlook2021") {
-//             hide(loginPage)
-//             show(userMainPage)
-//             displayClientDetails(client)
-//             changeBookingData(allBookingsData, allRoomsData)
-//             currentClient = client
-//             showPastBookings()
-//             displayRoomTypeOptions()
-//             return client
-//         }
-//         else if(username.value === "manager" && password.value === "overlook2021") {
-//             hide(loginPage)
-//             show(managerPage)
-//         }
-//         else {
-//             show(incorrentLoginText)
-//         }
-//     })
-// }
 
 function showAvailableRoomsByDate() {
     let dateInput = calenderInput.value.split("-")
@@ -201,11 +171,8 @@ function showAvailableRoomsByDate() {
 }
 
 function showAvailableRoomsByRoomType() {
-    //changeBookingData(allBookingsData, allRoomsData)
     let availableRooms = currentClient.filterRoomByRoomType(roomTypeSelection.options[roomTypeSelection.selectedIndex].text)
     console.log('room selection', roomTypeSelection.options[roomTypeSelection.selectedIndex].text)
-    // console.log('available rooms by roomtype', availableRooms)
-    // console.log('current Client filtered rooms', currentClient.filteredBookings)
     availableRoomsContainer.innerHTML = ''
     availableRooms.forEach(availableRoom => {
         availableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
@@ -237,12 +204,12 @@ function displayRoomTypeOptions() {
 }
 
 function bookRoom(event) {
+    let bookings = currentClient.bookRoom(event.target.id)
     if(selectedDate === undefined || roomTypeSelection.options[roomTypeSelection.selectedIndex].text === 'Room Type') {
         errorMessage.innerText = "Sorry there are no rooms available for your selected date or Room type, please try again"
     }
     else {
         errorMessage.innerText = ''
-    let bookings = currentClient.bookRoom(event.target.id)
     // console.log('booking', bookings)
     // console.log('event', event.target.id)
     let specificBooking = bookings.find(booking => booking.bookingId === event.target.id)
@@ -279,7 +246,8 @@ function bookRoom(event) {
 }
 
 function showPastBookings() {
-    let clientBookedRooms = currentClient.determineUserPastBookings()
+    let clientBookedRooms = currentClient.determineUserPastBookings(allBookingsData, allRoomsData)
+    console.log('og rooms booked', currentClient.roomsBooked)
     pastAndUpcomingBookingContainer.innerHTML = ''
     // console.log('clientBookedRooms', currentClient.bookingRoomDetails)
     currentClient.roomsBooked.forEach(bookedRoom => {
