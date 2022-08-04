@@ -8,7 +8,7 @@
   <title>Overlook</title>
 </head>
 <body>
-  <section class="login-page">
+  <section class="login-page hidden">
     <h1>Welcome to the Overlook Resort</h1>
     <form class="login-form">
       <label for="username">Username</label>
@@ -20,9 +20,9 @@
     </form>
   </section>
   <!-- end of loginpage -->
-  <section class="user-main-page hidden">
+  <section class="user-main-page">
     <header>
-      <button class="user-logout-button">Log out <i class="arrow right"> </i></button>
+      <button class="user-logout-button hidden">Log out <i class="arrow right"> </i></button>
       <section class="user-header">
         <h2 class="welcome-user">Welcome, user</h2>
         <h3 class="user-expenses">Your total expenses: $0.00</h3>
@@ -33,7 +33,7 @@
         <h3 class="stay-statement">Book your next stay</h3>
         <section class="booking-and-filtering">
           <label for="check-in">Check-In Date</label>
-          <input type="date" id='calenderInput' data-date-format="MM DD YYYY"></input>
+          <input type="date" id='calenderInput' data-date-format="MM DD YYYY" required></input>
           <button class="search-button">search</button>
           <label for="filter-rooms">Filter Rooms:</label>
           <select id="rooms" name="rooms">
@@ -45,6 +45,7 @@
           <button class="filter-room-input">submit</button>
         </section>
         <h3 class="available-rooms">Available Rooms</h3>
+        <p class="error-message"></p>
         <container class="rooms-container">
           <!-- remove when getting room data -->
           <!-- <section class="room-details-and-book-container">
@@ -64,7 +65,7 @@
       </section>
       <aside class="bookings">
         <h3 class="bookings-header">Past and Upcoming bookings</h3>
-        <container class="user-bookings-container"> 
+        <container class="user-bookings-container">
           <!-- remove when getting room data -->
           <!-- <section class="user-booking-details">
             <p class="room-spec2" id="date-booked">Date Booked: mm/dd/yyyy</p>
@@ -130,7 +131,7 @@
       </section>
       <aside class="guest-bookings">
         <h3 class="guest-bookings-header"> Guest Past and Upcoming bookings</h3>
-        <container class="guest-bookings-container"> 
+        <container class="guest-bookings-container">
           <!-- remove when getting room data -->
           <section class="guest-booking-details">
             <p class="room-spec2" id="date-booked">Date Booked: mm/dd/yyyy</p>
@@ -145,9 +146,8 @@
       </aside>
   </section>
     <!-- end of manager section -->
-  <!-- <img src="./images/turing-logo.png" alt="turing logo"> -->  
+  <!-- <img src="./images/turing-logo.png" alt="turing logo"> -->
   <!-- Do not include the scripts.js or class files here - it is done by the webpack server -->
   <script src="bundle.js"></script>
-
 </body>
 </html>

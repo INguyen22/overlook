@@ -15,18 +15,12 @@
 // roomType: "single room"
 // },
 
-// An example of how you tell webpack to use a CSS (SCSS) file
 import './css/styles.css';
-
-// An example of how you tell webpack to use an image (also need to link to it in the index.html)
-import './images/turing-logo.png'
 //imported classes
 import Bookings from './classes/bookings.js'
 import Rooms from './classes/rooms.js'
 import User from './classes/user.js'
 import Manager from './classes/manager.js'
-
-console.log('This is the JavaScript entry file - your code begins here.');
 
 //login-page querySelectors
 const loginPage = document.querySelector('.login-page')
@@ -41,6 +35,7 @@ const welcomeUserMessage = document.querySelector('.welcome-user')
 const userExpenseMessage = document.querySelector('.user-expenses')
 const calenderInput = document.querySelector('#calenderInput')
 const searchDateButton = document.querySelector('.search-button')
+const errorMessage = document.querySelector('.error-message')
 const availableRoomsContainer = document.querySelector('.rooms-container')
 const pastAndUpcomingBookingContainer = document.querySelector(".user-bookings-container")
 const roomTypeSelection = document.querySelector('select')
@@ -55,14 +50,17 @@ let customerInfo;
 let currentClient;
 let allRoomsData;
 let allBookingsData;
+let selectedDate;
+let roomNumber;
 //event listeners
 window.addEventListener('load', function() {
     allCustomersFetch()
     roomsFetch()
     bookingsFetch()
+    //displayRoomTypeOptions()
 })
-loginButton.addEventListener('click', login)
-userLogOut.addEventListener('click', userLogOutFunction)
+//loginButton.addEventListener('click', login)
+//userLogOut.addEventListener('click', userLogOutFunction)
 managerLogOut.addEventListener('click', managerLogOutFunction)
 searchDateButton.addEventListener('click', showAvailableRoomsByDate)
 roomTypeSubmitButton.addEventListener('click', showAvailableRoomsByRoomType)
@@ -73,22 +71,27 @@ function allCustomersFetch() {
     .then(response => response.json())
     .then(data => {
         allCustomersData = data.customers
+        let currentClientData = allCustomersData[Math.floor(Math.random() * allCustomersData.length)]
+        currentClient = new User(currentClientData)
+        welcomeUserMessage.innerHTML = `Welcome, ${currentClient.name}`
+        console.log('client', currentClient)
         //console.log(allCustomersData)
-        clientGenerator()
+        //clientGenerator()
     })
 }
 
-function singleCustomerFetch() {
-    fetch(`http://localhost:3001/api/v1/customers/<id>`)
-    .then(response => response.json())
-    .then(data => console.log(data))
-}
+// function singleCustomerFetch() {
+//     fetch(`http://localhost:3001/api/v1/customers/<id>`)
+//     .then(response => response.json())
+//     .then(data => console.log(data))
+// }
 
 function roomsFetch() {
     fetch(`http://localhost:3001/api/v1/rooms`)
     .then(response => response.json())
     .then(data => {
         allRoomsData = data.rooms
+        displayRoomTypeOptions()
         //console.log('rooms data', allRoomsData)
     })
 }
@@ -98,55 +101,87 @@ function bookingsFetch() {
     .then(response => response.json())
     .then(data => {
         allBookingsData = data.bookings
+        changeBookingData(allBookingsData, allRoomsData)
         //console.log('bookings data', allBookingsData)
     })
 }
 
-//event handlers
-function clientGenerator() {
-    let customer = allCustomersData.forEach(customer => {
-        clients.push(new User(customer, allBookingsData, allRoomsData))
-       //console.log(clients)
+function addBookingsPost() {
+    // console.log('current client', currentClient.filteredBookings)
+    // console.log(selectedDate)
+    fetch(`http://localhost:3001/api/v1/bookings`, {
+        method:'POST',
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ 
+            userID: currentClient.id, 
+            date: selectedDate,
+            roomNumber: roomNumber 
+        })
+    })
+    .then(response => { 
+        if (!response.ok) {
+          throw new Error('there was an error booking your reservation, Try again')
+        } else {
+          errorMessage.innerHTML = ''
+          return response.json()
+        }
+      })
+      .then(() => bookingsFetch())
+      .catch(err => {
+        errorMessage.innerHTML = `${err.message}`
     })
 }
+
+//event handlers
+// function clientGenerator() {
+//     let customer = allCustomersData.forEach(customer => {
+//         clients.push(new User(customer))
+//        //console.log(clients)
+//     })
+// }
 
 function changeBookingData(bookingsData, roomsData) {
-    return changeBookingData = clients.forEach(client => {
-        client.determineBookingRoomType(bookingsData, roomsData)
-    })
+    let clientBookingData =  currentClient.determineBookingRoomType(bookingsData, roomsData)
+    showPastBookings()
+    console.log('og rooms booked', currentClient.roomsBooked)
+    return clientBookingData
 }
 
-function login(event) {
-    event.preventDefault()
-    return clients.find(client => {
-        if(client.username === username.value && password.value === "overlook2021") {
-            hide(loginPage)
-            show(userMainPage)
-            displayClientDetails(client)
-            changeBookingData(allBookingsData, allRoomsData)
-            //console.log('client', client)
-            currentClient = client
-            showPastBookings()
-            displayRoomTypeOptions()
-            //console.log('currentClient', currentClient.bookingRoomDetails)
-            return client
-        }
-        else if(username.value === "manager" && password.value === "overlook2021") {
-            hide(loginPage)
-            show(managerPage)
-        }
-        else {
-            show(incorrentLoginText)
-        }
-    })
-}
+// function login(event) {
+//     event.preventDefault()
+//     return clients.find(client => {
+//         if(client.username === username.value && password.value === "overlook2021") {
+//             hide(loginPage)
+//             show(userMainPage)
+//             displayClientDetails(client)
+//             changeBookingData(allBookingsData, allRoomsData)
+//             currentClient = client
+//             showPastBookings()
+//             displayRoomTypeOptions()
+//             return client
+//         }
+//         else if(username.value === "manager" && password.value === "overlook2021") {
+//             hide(loginPage)
+//             show(managerPage)
+//         }
+//         else {
+//             show(incorrentLoginText)
+//         }
+//     })
+// }
 
 function showAvailableRoomsByDate() {
-    //console.log('before', calenderInput.value)
     let dateInput = calenderInput.value.split("-")
-    let newDateInput = dateInput.join("/")
-    //console.log('after', newDateInput)
-    let availableRooms = currentClient.filterBookingsByDate(newDateInput)
+        selectedDate = dateInput.join("/")
+        console.log('select date', selectedDate)
+    let availableRooms = currentClient.filterBookingsByDate(selectedDate)
+    if(!availableRooms) {
+        errorMessage.innerText = "Sorry there are no rooms available for your selected date, please try again"
+    }
+    else {
+    // console.log('available rooms by roomdate', availableRooms)
+    // console.log('current Client filtered rooms', currentClient.filteredBookings)
+    errorMessage.innerText = ''
     availableRoomsContainer.innerHTML = ''
     availableRooms.forEach(availableRoom => {
         availableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
@@ -161,12 +196,16 @@ function showAvailableRoomsByDate() {
           <button class="book" id='${availableRoom.bookingId}'>Book</button>
         </section>
       </section>`
-    })
+        })
+    }
 }
 
 function showAvailableRoomsByRoomType() {
+    //changeBookingData(allBookingsData, allRoomsData)
     let availableRooms = currentClient.filterRoomByRoomType(roomTypeSelection.options[roomTypeSelection.selectedIndex].text)
-    console.log('available rooms', availableRooms)
+    console.log('room selection', roomTypeSelection.options[roomTypeSelection.selectedIndex].text)
+    // console.log('available rooms by roomtype', availableRooms)
+    // console.log('current Client filtered rooms', currentClient.filteredBookings)
     availableRoomsContainer.innerHTML = ''
     availableRooms.forEach(availableRoom => {
         availableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
@@ -198,19 +237,51 @@ function displayRoomTypeOptions() {
 }
 
 function bookRoom(event) {
-    let booking = currentClient.bookRoom(event.target.id)
-    console.log('booking', booking)
-    console.log('client booking', currentClient.bookingRoomDetails)
-    //can add to the past and upcomming
-    //can remove from booking options
-    //chnaging data around 
-    
+    if(selectedDate === undefined || roomTypeSelection.options[roomTypeSelection.selectedIndex].text === 'Room Type') {
+        errorMessage.innerText = "Sorry there are no rooms available for your selected date or Room type, please try again"
+    }
+    else {
+        errorMessage.innerText = ''
+    let bookings = currentClient.bookRoom(event.target.id)
+    // console.log('booking', bookings)
+    // console.log('event', event.target.id)
+    let specificBooking = bookings.find(booking => booking.bookingId === event.target.id)
+    // console.log('specific', specificBooking)
+    roomNumber = specificBooking.roomNumber
+    addBookingsPost()
+    availableRoomsContainer.innerHTML = ''
+    currentClient.filteredBookings.forEach(filteredBooking => {
+        availableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
+        <section class="room-info">
+          <p class="room-spec" id="${filteredBooking.bookingId}">Room Type: ${filteredBooking.roomType}</p>
+          <p class="room-spec" id="room-detail-title">Room Details:</p>
+          <p class="room-spec" id="room-bed-info">Bed size: ${filteredBooking.bedSize} [x${filteredBooking.numBeds}]</p>
+          <p class="room-spec" id="room-date-info">Available Date: ${filteredBooking.date}</p>
+        </section>
+        <section class="rates-and-book">
+          <p class="room-spec" id="rates">$${filteredBooking.costPerNight} per night</p>
+          <button class="book" id='${filteredBooking.bookingId}'>Book</button>
+        </section>
+      </section>`
+    })
+    pastAndUpcomingBookingContainer.innerHTML = ''
+    bookings.forEach(booking => {
+        pastAndUpcomingBookingContainer.innerHTML += `<section class="user-booking-details">
+        <p class="room-spec2" id="date-booked">Date Booked: ${booking.date}</p>
+        <p class="room-spec2" id="room-detail-title">Room Details:</p>
+        <p class="room-spec2" id="room-bed-info">Bed size: ${booking.bedSize} [x${booking.numBeds}]</p>
+        <p class="room-spec2" id="rates2"> Cost: $${booking.costPerNight} per night</p>
+      </section>`
+    })
+    console.log('rooms booked', currentClient.roomsBooked)
+    calculateClientExpenses()
+    }
 }
 
 function showPastBookings() {
     let clientBookedRooms = currentClient.determineUserPastBookings()
     pastAndUpcomingBookingContainer.innerHTML = ''
-    console.log('clientBookedRooms', currentClient.bookingRoomDetails)
+    // console.log('clientBookedRooms', currentClient.bookingRoomDetails)
     currentClient.roomsBooked.forEach(bookedRoom => {
         pastAndUpcomingBookingContainer.innerHTML += `<section class="user-booking-details">
         <p class="room-spec2" id="date-booked">Date Booked: ${bookedRoom.date}</p>
@@ -219,12 +290,22 @@ function showPastBookings() {
         <p class="room-spec2" id="rates2"> Cost: $${bookedRoom.costPerNight} per night</p>
       </section>`
     })
+    calculateClientExpenses()
+}
+
+function calculateClientExpenses() {
+    let expenses = currentClient.userExpenseTotal()
+    //console.log('expenses', expenses)
+    userExpenseMessage.innerText = `Your total expenses: $${expenses}`
 }
 
 function userLogOutFunction() {
     hide(userMainPage)
     show(loginPage)
     hide(incorrentLoginText)
+    currentClient = ''
+    allRoomsData = ''
+    allBookingsData = ''
 }
 
 function managerLogOutFunction() {

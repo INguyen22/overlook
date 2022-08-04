@@ -137,7 +137,7 @@ header {
   flex-direction: column;
   background-color: rgba(251, 251, 251, 0.3);
   border-style: outset;
-  height: 93%;
+  height: 90%;
   margin-top: 5px;
   margin-left: 3%;
   overflow-y: auto;
@@ -225,8 +225,19 @@ aside {
   margin: 0%;
 }
 
+.room-spec {
+  margin-top: 0%;
+}
+
 .user-check-in-info {
   height: 70vh;
+}
+
+.error-message {
+  margin-left: 80px;
+  font-weight: bold;
+  font-size: 20px;
+  color: red;
 }
 
 /* manager-page-specs */
