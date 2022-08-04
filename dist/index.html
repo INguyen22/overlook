@@ -33,7 +33,7 @@
         <h3 class="stay-statement">Book your next stay</h3>
         <section class="booking-and-filtering">
           <label for="check-in">Check-In Date</label>
-          <input type="date" id='calenderInput' data-date-format="MM DD YYYY"></input>
+          <input type="date" id='calenderInput' data-date-format="MM DD YYYY" required></input>
           <button class="search-button">search</button>
           <label for="filter-rooms">Filter Rooms:</label>
           <select id="rooms" name="rooms">
@@ -45,6 +45,7 @@
           <button class="filter-room-input">submit</button>
         </section>
         <h3 class="available-rooms">Available Rooms</h3>
+        <p class="error-message"></p>
         <container class="rooms-container">
           <!-- remove when getting room data -->
           <!-- <section class="room-details-and-book-container">

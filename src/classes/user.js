@@ -6,20 +6,39 @@ class User {
         this.bookingRoomDetails = []
         this.roomsBooked = []
         this.expenses = 0
+        this.filteredBookings = []
+        this.error = ''
     }
 
     filterBookingsByDate(date) {
-        return this.bookingRoomDetails = this.bookingRoomDetails.filter(room => 
-            room.date === date
-        )
+        const bookingTest = this.bookingRoomDetails.some(booking => booking.date === date)
+        // const filteredBookingTest = this.filteredBookings.some(filteredBooking => filteredBooking.date === date)
+        if(bookingTest) {
+            return this.filteredBookings = this.bookingRoomDetails.filter(room => 
+                room.date === date
+            )
+        }
+        else {
+            return false
+        }
     }
 
     filterRoomByRoomType(roomType) {
-        return this.bookingRoomDetails = this.bookingRoomDetails.filter(room => 
-            room.roomType === roomType
-        )
+        const bookingTest = this.bookingRoomDetails.some(booking => booking.roomType === roomType)
+        console.log(bookingTest)
+        if(bookingTest) {
+            return this.filteredBookings = this.bookingRoomDetails.filter(room => 
+                room.roomType === roomType
+            )
+        }
+        else {
+            return false
+        }
     }
 
+    // return this.filteredBookings = this.bookingRoomDetails.filter(room => 
+    //     room.roomType === roomType
+    // )
     userExpenseTotal() {
         const totalCost = this.roomsBooked.reduce((sum, room) => {
             let total = sum + room.costPerNight
@@ -36,6 +55,7 @@ class User {
                     const specificBookingRoomDetail = {
                         bookingId: booking.id,
                         userId: booking.userID,
+                        roomNumber: booking.roomNumber,
                         roomType: room.roomType,
                         bidet: room.bidet,
                         bedSize: room.bedSize,
@@ -69,6 +89,12 @@ class User {
                 this.bookingRoomDetails.splice(this.bookingRoomDetails.indexOf(bookingRoom), 1)
             }
         })
+        const bookRoom2 = this.filteredBookings.forEach(filteredBooking => {
+            if(filteredBooking.bookingId === roomId) {
+                // this.roomsBooked.push(filteredBooking)
+                this.filteredBookings.splice(this.filteredBookings.indexOf(filteredBooking), 1)
+            }
+        })
         return this.roomsBooked
     }
 }
@@ -80,6 +106,7 @@ export default User
 //     {
 //       bookingId: '5fwrgu4i7k55hl6sz',
 //       userId: 9,
+//       roomNumber: 15,
 //       roomType: 'residential suite',
 //       bidet: false,
 //       bedSize: 'full',
@@ -90,6 +117,7 @@ export default User
 //     {
 //       bookingId: '5fwrgu4i7k55hl6t5',
 //       userId: 43,
+//       roomNumber: 24,
 //       roomType: 'suite',
 //       bidet: false,
 //       bedSize: 'queen',
@@ -100,6 +128,7 @@ export default User
 //     {
 //       bookingId: '5fwrgu4i7k55hl6t6',
 //       userId: 13,
+//       roomNumber: 12,
 //       roomType: 'single room',
 //       bidet: false,
 //       bedSize: 'twin',
@@ -110,6 +139,7 @@ export default User
 //     {
 //       bookingId: '5fwrgu4i7k55hl6t7',
 //       userId: 20,
+//       roomNumber: 7,
 //       roomType: 'single room',
 //       bidet: false,
 //       bedSize: 'queen',
@@ -120,6 +150,7 @@ export default User
 //     {
 //       bookingId: '5fwrgu4i7k55hl6t8',
 //       userId: 1,
+//       roomNumber: 12,
 //       roomType: 'single room',
 //       bidet: false,
 //       bedSize: 'twin',
@@ -130,6 +161,7 @@ export default User
 //     {
 //       bookingId: '5fwrgu4i7k55hl6t9',
 //       userId: 38,
+//       roomNumber: 14,
 //       roomType: 'residential suite',
 //       bidet: false,
 //       bedSize: 'twin',
@@ -140,6 +172,7 @@ export default User
 //     {
 //       bookingId: '5fwrgu4i7k55hl6ta',
 //       userId: 25,
+//       roomNumber: 9,
 //       roomType: 'single room',
 //       bidet: true,
 //       bedSize: 'queen',
@@ -150,6 +183,7 @@ export default User
 //     {
 //       bookingId: '5fwrgu4i7k55hl6tb',
 //       userId: 49,
+//       roomNumber: 5,
 //       roomType: 'single room',
 //       bidet: true,
 //       bedSize: 'queen',
@@ -160,6 +194,7 @@ export default User
 //     {
 //       bookingId: '5fwrgu4i7k55hl6tc',
 //       userId: 22,
+//       roomNumber: 13,
 //       roomType: 'single room',
 //       bidet: false,
 //       bedSize: 'queen',
@@ -170,6 +205,7 @@ export default User
 //     {
 //       bookingId: '5fwrgu4i7k55hl6td',
 //       userId: 27,
+//       roomNumber: 20,
 //       roomType: 'residential suite',
 //       bidet: false,
 //       bedSize: 'queen',
@@ -180,6 +216,7 @@ export default User
 //     {
 //       bookingId: '5fwrgu4i7k55hl6te',
 //       userId: 44,
+//       roomNumber: 8,
 //       roomType: 'junior suite',
 //       bidet: false,
 //       bedSize: 'king',
