@@ -257,6 +257,7 @@ describe('user', () => {
         expect(user1.bookingRoomDetails[0]).to.deep.equal({
             bookingId: '5fwrgu4i7k55hl6sz',
             userId: 9,
+            roomNumber: 15,
             roomType: 'residential suite',
             bidet: false,
             bedSize: 'full',
@@ -277,6 +278,7 @@ describe('user', () => {
                 {
                   bookingId: '5fwrgu4i7k55hl6t8',
                   userId: 1,
+                  roomNumber: 12,
                   roomType: 'single room',
                   bidet: false,
                   bedSize: 'twin',
@@ -295,6 +297,7 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6sz',
                 userId: 9,
+                roomNumber: 15,
                 roomType: 'residential suite',
                 bidet: false,
                 bedSize: 'full',
@@ -305,6 +308,7 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6t5',
                 userId: 43,
+                roomNumber: 24,
                 roomType: 'suite',
                 bidet: false,
                 bedSize: 'queen',
@@ -315,6 +319,7 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6t6',
                 userId: 13,
+                roomNumber: 12,
                 roomType: 'single room',
                 bidet: false,
                 bedSize: 'twin',
@@ -325,6 +330,7 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6t7',
                 userId: 20,
+                roomNumber: 7,
                 roomType: 'single room',
                 bidet: false,
                 bedSize: 'queen',
@@ -335,8 +341,9 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6t9',
                 userId: 38,
+                roomNumber: 14,
                 roomType: 'residential suite',
-                        bidet: false,
+                bidet: false,
                 bedSize: 'twin',
                 numBeds: 1,
                 costPerNight: 457.88,
@@ -345,6 +352,7 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6ta',
                 userId: 25,
+                roomNumber: 9,
                 roomType: 'single room',
                 bidet: true,
                 bedSize: 'queen',
@@ -355,6 +363,7 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6tb',
                 userId: 49,
+                roomNumber: 5,
                 roomType: 'single room',
                 bidet: true,
                 bedSize: 'queen',
@@ -365,6 +374,7 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6tc',
                 userId: 22,
+                roomNumber: 13,
                 roomType: 'single room',
                 bidet: false,
                 bedSize: 'queen',
@@ -375,6 +385,7 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6td',
                 userId: 27,
+                roomNumber: 20,
                 roomType: 'residential suite',
                 bidet: false,
                 bedSize: 'queen',
@@ -385,6 +396,7 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6te',
                 userId: 44,
+                roomNumber: 8,
                 roomType: 'junior suite',
                 bidet: false,
                 bedSize: 'king',
@@ -406,6 +418,7 @@ describe('user', () => {
         expect(user1.roomsBooked[0]).to.deep.equal({
             bookingId: '5fwrgu4i7k55hl6sz',
             userId: 9,
+            roomNumber: 15,
             roomType: 'residential suite',
             bidet: false,
             bedSize: 'full',
@@ -423,6 +436,7 @@ describe('user', () => {
             {
             bookingId: '5fwrgu4i7k55hl6sz',
             userId: 9,
+            roomNumber: 15,
             roomType: 'residential suite',
             bidet: false,
             bedSize: 'full',
@@ -433,6 +447,7 @@ describe('user', () => {
             {
             bookingId: '5fwrgu4i7k55hl6t5',
             userId: 43,
+            roomNumber: 24,
             roomType: 'suite',
             bidet: false,
             bedSize: 'queen',
@@ -451,6 +466,7 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6t5',
                 userId: 43,
+                roomNumber: 24,
                 roomType: 'suite',
                 bidet: false,
                 bedSize: 'queen',
@@ -461,6 +477,7 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6t6',
                 userId: 13,
+                roomNumber: 12,
                 roomType: 'single room',
                 bidet: false,
                 bedSize: 'twin',
@@ -471,6 +488,7 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6t7',
                 userId: 20,
+                roomNumber: 7,
                 roomType: 'single room',
                 bidet: false,
                 bedSize: 'queen',
@@ -481,6 +499,7 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6t8',
                 userId: 1,
+                roomNumber: 12,
                 roomType: 'single room',
                 bidet: false,
                 bedSize: 'twin',
@@ -491,6 +510,7 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6t9',
                 userId: 38,
+                roomNumber: 14,
                 roomType: 'residential suite',
                 bidet: false,
                 bedSize: 'twin',
@@ -500,7 +520,8 @@ describe('user', () => {
                 },
                 {
                 bookingId: '5fwrgu4i7k55hl6ta',
-                        userId: 25,
+                userId: 25,
+                roomNumber: 9,
                 roomType: 'single room',
                 bidet: true,
                 bedSize: 'queen',
@@ -511,6 +532,7 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6tb',
                 userId: 49,
+                roomNumber: 5,
                 roomType: 'single room',
                 bidet: true,
                 bedSize: 'queen',
@@ -521,8 +543,9 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6tc',
                 userId: 22,
+                roomNumber: 13,
                 roomType: 'single room',
-                        bidet: false,
+                bidet: false,
                 bedSize: 'queen',
                 numBeds: 2,
                 costPerNight: 423.92,
@@ -531,6 +554,7 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6td',
                 userId: 27,
+                roomNumber: 20,
                 roomType: 'residential suite',
                 bidet: false,
                 bedSize: 'queen',
@@ -541,6 +565,7 @@ describe('user', () => {
                 {
                 bookingId: '5fwrgu4i7k55hl6te',
                 userId: 44,
+                roomNumber: 8,
                 roomType: 'junior suite',
                 bidet: false,
                 bedSize: 'king',
@@ -563,10 +588,11 @@ describe('user', () => {
     it('should filter bookings by date', () => {
         user1.determineBookingRoomType(bookingsData, roomsData)
         user1.filterBookingsByDate('2022/01/24')
-        expect(user1.bookingRoomDetails).to.deep.equal([
+        expect(user1.filteredBookings).to.deep.equal([
             {
                 bookingId: '5fwrgu4i7k55hl6t5',
                 userId: 43,
+                roomNumber: 24,
                 roomType: 'suite',
                 bidet: false,
                 bedSize: 'queen',
@@ -577,13 +603,19 @@ describe('user', () => {
         ])
     })
 
+    it('should give a notice when no rooms are available for a date', () => {
+        user1.determineBookingRoomType(bookingsData, roomsData)
+        expect(user1.filterBookingsByDate('2022/01/07')).to.equal(false)
+    })
+
     it('should filter bookings by room type', () => {
         user1.determineBookingRoomType(bookingsData, roomsData)
         user1.filterRoomByRoomType('residential suite')
-        expect(user1.bookingRoomDetails).to.deep.equal([
+        expect(user1.filteredBookings).to.deep.equal([
             {
             bookingId: '5fwrgu4i7k55hl6sz',
             userId: 9,
+            roomNumber: 15,
             roomType: 'residential suite',
             bidet: false,
             bedSize: 'full',
@@ -594,6 +626,7 @@ describe('user', () => {
             {
             bookingId: "5fwrgu4i7k55hl6t9",
             userId: 38,
+            roomNumber: 14,
             roomType: "residential suite",
             bidet: false,
             bedSize: "twin",
@@ -604,12 +637,52 @@ describe('user', () => {
             {
             bookingId: "5fwrgu4i7k55hl6td",
             userId: 27,
+            roomNumber: 20,
             roomType: "residential suite",
             bidet: false,
             bedSize: "queen",
             numBeds: 1,
             costPerNight: 343.95,
             date: "2022/01/31",
+            }
+        ])
+    })
+
+    // it('should give a notice when no rooms are available for a roomtype on a date', () => {
+    //     user1.determineBookingRoomType(bookingsData, roomsData)
+    //     user1.filterRoomByRoomType('residential suite')
+    //     user1.filterBookingsByDate('2022/01/10')
+    //     expect(user1.filteredBookings).to.equal(
+    //         `Sorry no rooms are available, please adjust the date or room type`
+    //         )
+    // })
+
+    it('should remove booking from filtered list when booked', () => {
+        user1.determineBookingRoomType(bookingsData, roomsData)
+        user1.filterRoomByRoomType('residential suite')
+        user1.bookRoom('5fwrgu4i7k55hl6sz')
+        expect(user1.filteredBookings).to.deep.equal([
+            {
+                bookingId: "5fwrgu4i7k55hl6t9",
+                userId: 38,
+                roomNumber: 14,
+                roomType: "residential suite",
+                bidet: false,
+                bedSize: "twin",
+                numBeds: 1,
+                costPerNight: 457.88,
+                date: "2022/02/14",
+                },
+                {
+                bookingId: "5fwrgu4i7k55hl6td",
+                userId: 27,
+                roomNumber: 20,
+                roomType: "residential suite",
+                bidet: false,
+                bedSize: "queen",
+                numBeds: 1,
+                costPerNight: 343.95,
+                date: "2022/01/31",
             }
         ])
     })

@@ -1,20 +1,13 @@
 // This is the JavaScript entry file - your code begins here
 // Do not delete or rename this file ********
 
-//notes
-//depending on the roomnumber of the booking 
-//is what room type the booking has
-//ex: booking: {id: '5fwrgu4i7k55hl6tb', userID: 49, date: '2022/02/06', roomNumber: 5},
-//has room type of:{
-// id: '5fwrgu4i7k55hl6tb'
-// bedSize: "queen",
-// bidet: true,
-// costPerNight: 340.17,
-// numBeds: 2,
-// number: 5,
-// roomType: "single room"
-// },
-
+//questions
+//am i chnaging the data like i'm suppoused to/creating it?
+//should i be changing all the data off the bat?
+//should i move some of my user methods to the scripts so they're not associated with the class
+//address filtering problems and display error message
+//posting booking to server
+//
 // An example of how you tell webpack to use a CSS (SCSS) file
 import './css/styles.css';
 
@@ -26,7 +19,7 @@ import Rooms from './classes/rooms.js'
 import User from './classes/user.js'
 import Manager from './classes/manager.js'
 
-console.log('This is the JavaScript entry file - your code begins here.');
+// console.log('This is the JavaScript entry file - your code begins here.');
 
 //login-page querySelectors
 const loginPage = document.querySelector('.login-page')
@@ -41,6 +34,7 @@ const welcomeUserMessage = document.querySelector('.welcome-user')
 const userExpenseMessage = document.querySelector('.user-expenses')
 const calenderInput = document.querySelector('#calenderInput')
 const searchDateButton = document.querySelector('.search-button')
+const errorMessage = document.querySelector('.error-message')
 const availableRoomsContainer = document.querySelector('.rooms-container')
 const pastAndUpcomingBookingContainer = document.querySelector(".user-bookings-container")
 const roomTypeSelection = document.querySelector('select')
@@ -55,6 +49,8 @@ let customerInfo;
 let currentClient;
 let allRoomsData;
 let allBookingsData;
+let selectedDate;
+let roomNumber;
 //event listeners
 window.addEventListener('load', function() {
     allCustomersFetch()
@@ -102,33 +98,66 @@ function bookingsFetch() {
     })
 }
 
+function addBookingsPost() {
+    // console.log('current client', currentClient.filteredBookings)
+    // console.log(selectedDate)
+    fetch(`http://localhost:3001/api/v1/bookings`, {
+        method:'POST',
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ 
+            userID: currentClient.id, 
+            date: selectedDate,
+            roomNumber: roomNumber 
+        })
+    })
+    .then(response => { 
+        if (!response.ok) {
+          throw new Error('there was an error booking your reservation, Try again')
+        } else {
+          errorMessage.innerHTML = ''
+          return response.json()
+        }
+      })
+      .then(() => bookingsFetch())
+      .catch(err => {
+        errorMessage.innerHTML = `${err.message}`
+    })
+}
+
 //event handlers
 function clientGenerator() {
     let customer = allCustomersData.forEach(customer => {
-        clients.push(new User(customer, allBookingsData, allRoomsData))
+        clients.push(new User(customer))
        //console.log(clients)
     })
 }
 
 function changeBookingData(bookingsData, roomsData) {
-    return changeBookingData = clients.forEach(client => {
+    const changeBookingDetails = clients.forEach(client => {
         client.determineBookingRoomType(bookingsData, roomsData)
     })
+    return changeBookingDetails
 }
 
+
+
 function login(event) {
+    console.log('hi')
     event.preventDefault()
     return clients.find(client => {
         if(client.username === username.value && password.value === "overlook2021") {
+            console.log('client', client)
             hide(loginPage)
             show(userMainPage)
             displayClientDetails(client)
+            // bookingsFetch().then(data => {
+            //     console.log(data)
+            //     changeBookingData(data, allRoomsData)
+            // })
             changeBookingData(allBookingsData, allRoomsData)
-            //console.log('client', client)
             currentClient = client
             showPastBookings()
             displayRoomTypeOptions()
-            //console.log('currentClient', currentClient.bookingRoomDetails)
             return client
         }
         else if(username.value === "manager" && password.value === "overlook2021") {
@@ -142,11 +171,17 @@ function login(event) {
 }
 
 function showAvailableRoomsByDate() {
-    //console.log('before', calenderInput.value)
     let dateInput = calenderInput.value.split("-")
-    let newDateInput = dateInput.join("/")
-    //console.log('after', newDateInput)
-    let availableRooms = currentClient.filterBookingsByDate(newDateInput)
+        selectedDate = dateInput.join("/")
+        console.log('select date', selectedDate)
+    let availableRooms = currentClient.filterBookingsByDate(selectedDate)
+    if(!availableRooms) {
+        errorMessage.innerText = "Sorry there are no rooms available for your selected date, please try again"
+    }
+    else {
+    // console.log('available rooms by roomdate', availableRooms)
+    // console.log('current Client filtered rooms', currentClient.filteredBookings)
+    errorMessage.innerText = ''
     availableRoomsContainer.innerHTML = ''
     availableRooms.forEach(availableRoom => {
         availableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
@@ -161,12 +196,15 @@ function showAvailableRoomsByDate() {
           <button class="book" id='${availableRoom.bookingId}'>Book</button>
         </section>
       </section>`
-    })
+        })
+    }
 }
 
 function showAvailableRoomsByRoomType() {
     let availableRooms = currentClient.filterRoomByRoomType(roomTypeSelection.options[roomTypeSelection.selectedIndex].text)
-    console.log('available rooms', availableRooms)
+    console.log('room selection', roomTypeSelection.options[roomTypeSelection.selectedIndex].text)
+    // console.log('available rooms by roomtype', availableRooms)
+    // console.log('current Client filtered rooms', currentClient.filteredBookings)
     availableRoomsContainer.innerHTML = ''
     availableRooms.forEach(availableRoom => {
         availableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
@@ -198,33 +236,78 @@ function displayRoomTypeOptions() {
 }
 
 function bookRoom(event) {
-    let booking = currentClient.bookRoom(event.target.id)
-    console.log('booking', booking)
-    console.log('client booking', currentClient.bookingRoomDetails)
-    //can add to the past and upcomming
-    //can remove from booking options
-    //chnaging data around 
-    
+    if(selectedDate === '' || roomTypeSelection.options[roomTypeSelection.selectedIndex].text === 'Room Type') {
+        errorMessage.innerText = "Sorry there are no rooms available for your selected date or Room type, please try again"
+    }
+    else {
+        errorMessage.innerText = ''
+    let bookings = currentClient.bookRoom(event.target.id)
+    // console.log('booking', bookings)
+    // console.log('event', event.target.id)
+    let specificBooking = bookings.find(booking => booking.bookingId === event.target.id)
+    // console.log('specific', specificBooking)
+    roomNumber = specificBooking.roomNumber
+    addBookingsPost()
+    availableRoomsContainer.innerHTML = ''
+    currentClient.filteredBookings.forEach(filteredBooking => {
+        availableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
+        <section class="room-info">
+          <p class="room-spec" id="${filteredBooking.bookingId}">Room Type: ${filteredBooking.roomType}</p>
+          <p class="room-spec" id="room-detail-title">Room Details:</p>
+          <p class="room-spec" id="room-bed-info">Bed size: ${filteredBooking.bedSize} [x${filteredBooking.numBeds}]</p>
+          <p class="room-spec" id="room-date-info">Available Date: ${filteredBooking.date}</p>
+        </section>
+        <section class="rates-and-book">
+          <p class="room-spec" id="rates">$${filteredBooking.costPerNight} per night</p>
+          <button class="book" id='${filteredBooking.bookingId}'>Book</button>
+        </section>
+      </section>`
+    })
+    pastAndUpcomingBookingContainer.innerHTML = ''
+    bookings.forEach(booking => {
+        pastAndUpcomingBookingContainer.innerHTML += `<section class="user-booking-details">
+        <p class="room-spec2" id="date-booked">Date Booked: ${booking.date}</p>
+        <p class="room-spec2" id="room-detail-title">Room Details:</p>
+        <p class="room-spec2" id="room-bed-info">Bed size: ${booking.bedSize} [x${booking.numBeds}]</p>
+        <p class="room-spec2" id="rates2"> Cost: $${booking.costPerNight} per night</p>
+      </section>`
+    })
+    calculateClientExpenses()
+    }
 }
 
 function showPastBookings() {
+    console.log('new client', currentClient)
     let clientBookedRooms = currentClient.determineUserPastBookings()
     pastAndUpcomingBookingContainer.innerHTML = ''
-    console.log('clientBookedRooms', currentClient.bookingRoomDetails)
+    // console.log('clientBookedRooms', currentClient.bookingRoomDetails)
     currentClient.roomsBooked.forEach(bookedRoom => {
-        pastAndUpcomingBookingContainer.innerHTML += `<section class="user-booking-details">
+        pastAndUpcomingBookingContainer.innerHTML += `<section tabindex="0" class="user-booking-details">
         <p class="room-spec2" id="date-booked">Date Booked: ${bookedRoom.date}</p>
         <p class="room-spec2" id="room-detail-title">Room Details:</p>
         <p class="room-spec2" id="room-bed-info">Bed size: ${bookedRoom.bedSize} [x${bookedRoom.numBeds}]</p>
         <p class="room-spec2" id="rates2"> Cost: $${bookedRoom.costPerNight} per night</p>
       </section>`
     })
+    calculateClientExpenses()
+}
+
+function calculateClientExpenses() {
+    let expenses = currentClient.userExpenseTotal()
+    //console.log('expenses', expenses)
+    userExpenseMessage.innerText = `Your total expenses: $${expenses}`
 }
 
 function userLogOutFunction() {
     hide(userMainPage)
     show(loginPage)
     hide(incorrentLoginText)
+    clients = []
+    availableRoomsContainer.innerHTML = ''
+    pastAndUpcomingBookingContainer.innerHTML = ''
+    allCustomersFetch()
+    roomsFetch()
+    bookingsFetch()
 }
 
 function managerLogOutFunction() {
