@@ -602,7 +602,7 @@ describe('user', () => {
             date: "2022/02/14",
             },
             {
-x            bookingId: "5fwrgu4i7k55hl6td",
+            bookingId: "5fwrgu4i7k55hl6td",
             userId: 27,
             roomType: "residential suite",
             bidet: false,

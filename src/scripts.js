@@ -101,7 +101,7 @@ function bookingsFetch() {
     .then(response => response.json())
     .then(data => {
         allBookingsData = data.bookings
-        showPastBookings()
+        changeBookingData(allBookingsData, allRoomsData)
         //changeBookingData(allBookingsData, allRoomsData)
         //console.log('bookings data', allBookingsData)
     })
@@ -137,6 +137,7 @@ function changeBookingData(bookingsData, roomsData) {
     let clientBookingData =  currentClient.determineBookingRoomType(bookingsData, roomsData)
     // showPastBookings()
     console.log('og rooms booked', currentClient.roomsBooked)
+    showPastBookings()
     return clientBookingData
 }
 
@@ -241,17 +242,19 @@ function bookRoom(event) {
       </section>`
     })
     console.log('rooms booked', currentClient.roomsBooked)
-    calculateClientExpenses()
     }
 }
 
 function showPastBookings() {
-    let clientBookedRooms = currentClient.determineUserPastBookings(allBookingsData, allRoomsData)
+    console.log('hi')
+    // changeBookingData(allBookingsData, allRoomsData)
+    console.log(currentClient)
     console.log('og rooms booked', currentClient.roomsBooked)
+    currentClient.determineUserPastBookings()
     pastAndUpcomingBookingContainer.innerHTML = ''
     // console.log('clientBookedRooms', currentClient.bookingRoomDetails)
     currentClient.roomsBooked.forEach(bookedRoom => {
-        pastAndUpcomingBookingContainer.innerHTML += `<section class="user-booking-details">
+        pastAndUpcomingBookingContainer.innerHTML += `<section tabindex="0" class="user-booking-details">
         <p class="room-spec2" id="date-booked">Date Booked: ${bookedRoom.date}</p>
         <p class="room-spec2" id="room-detail-title">Room Details:</p>
         <p class="room-spec2" id="room-bed-info">Bed size: ${bookedRoom.bedSize} [x${bookedRoom.numBeds}]</p>
@@ -267,14 +270,14 @@ function calculateClientExpenses() {
     userExpenseMessage.innerText = `Your total expenses: $${expenses}`
 }
 
-function userLogOutFunction() {
-    hide(userMainPage)
-    show(loginPage)
-    hide(incorrentLoginText)
-    currentClient = ''
-    allRoomsData = ''
-    allBookingsData = ''
-}
+// function userLogOutFunction() {
+//     hide(userMainPage)
+//     show(loginPage)
+//     hide(incorrentLoginText)
+//     currentClient = ''
+//     allRoomsData = ''
+//     allBookingsData = ''
+// }
 
 function managerLogOutFunction() {
     hide(managerPage)

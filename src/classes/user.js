@@ -71,15 +71,15 @@ class User {
         return bookingRoomType
     }
 
-    determineUserPastBookings(bookingsData, roomsData) {
-        this.determineBookingRoomType(bookingsData, roomsData)
+    determineUserPastBookings() {
+        //this.determineBookingRoomType(bookingsData, roomsData)
         const userBookedRooms = this.bookingRoomDetails.forEach(booking => {
-            if(this.id === booking.userId) {
+            if(this.id === booking.userId && !this.roomsBooked.includes(booking)) {
                 this.roomsBooked.push(booking)
                 this.bookingRoomDetails.splice(this.bookingRoomDetails.indexOf(booking), 1)
             }
         })
-        return userBookedRooms
+        return this.roomsBooked
     }
 
     bookRoom(roomId) {
