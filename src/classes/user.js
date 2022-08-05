@@ -7,6 +7,7 @@ class User {
         this.roomsBooked = []
         this.expenses = 0
         this.filteredBookings = []
+        this.error = ''
     }
 
     filterBookingsByDate(date) {
@@ -72,33 +73,40 @@ class User {
     }
 
     determineUserPastBookings() {
-        //this.determineBookingRoomType(bookingsData, roomsData)
         const userBookedRooms = this.bookingRoomDetails.forEach(booking => {
-            if(this.id === booking.userId && !this.roomsBooked.includes(booking)) {
+            if(this.id === booking.userId) {
                 this.roomsBooked.push(booking)
                 this.bookingRoomDetails.splice(this.bookingRoomDetails.indexOf(booking), 1)
             }
         })
-        return this.roomsBooked
+        return userBookedRooms
     }
 
     bookRoom(roomId) {
+        const bookRoom = this.bookingRoomDetails.forEach(bookingRoom => {
+            if(bookingRoom.bookingId === roomId) {
+                this.roomsBooked.push(bookingRoom)
+                this.bookingRoomDetails.splice(this.bookingRoomDetails.indexOf(bookingRoom), 1)
+            }
+        })
         const bookRoom2 = this.filteredBookings.forEach(filteredBooking => {
-            this.bookingRoomDetails.forEach(booking => {
-            if(filteredBooking.bookingId === roomId && !this.roomsBooked.includes(filteredBooking)) {
+            if(filteredBooking.bookingId === roomId) {
                 this.roomsBooked.push(filteredBooking)
                 this.filteredBookings.splice(this.filteredBookings.indexOf(filteredBooking), 1)
             }
-            if(booking.bookingId === filteredBooking.bookingId) {
-                this.bookingRoomDetails.splice(this.bookingRoomDetails.indexOf(booking), 1)
-            }
         })
-    })
-    return this.roomsBooked
-}
+        return this.roomsBooked
+    }
 }
 
 export default User
+
+// const bookRoom2 = this.filteredBookings.forEach(filteredBooking => {
+//     if(filteredBooking.bookingId === roomId) {
+//         this.roomsBooked.push(filteredBooking)
+//         this.filteredBookings.splice(this.filteredBookings.indexOf(filteredBooking), 1)
+//     }
+// })
 
         // const bookRoom = this.bookingRoomDetails.forEach(bookingRoom => {
         //     if(bookingRoom.bookingId === roomId && !this.roomsBooked.includes(roomId)) {
