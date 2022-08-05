@@ -582,12 +582,20 @@ describe('user', () => {
         user1.bookRoom('5fwrgu4i7k55hl6sz')
         user1.bookRoom('5fwrgu4i7k55hl6t5')
         user1.userExpenseTotal()
-        expect(user1.expenses).to.equal(621.8)
+        expect(user1.expenses).to.equal('621.80')
     })
 
-    it('should filter bookings by date', () => {
+
+    it('should remove booking from filtered list when booked', () => {
         user1.determineBookingRoomType(bookingsData, roomsData)
-        user1.filterBookingsByDate('2022/01/24')
+        user1.filterByDateAndOrRoomType('2022/04/22', 'residential suite')
+        user1.bookRoom('5fwrgu4i7k55hl6sz')
+        expect(user1.filteredBookings).to.deep.equal([])
+    })
+
+    it('should filter filter rooms by date only', () => {
+        user1.determineBookingRoomType(bookingsData, roomsData)
+        user1.filterByDateAndOrRoomType('2022/01/24', 'suite')
         expect(user1.filteredBookings).to.deep.equal([
             {
                 bookingId: '5fwrgu4i7k55hl6t5',
@@ -605,85 +613,6 @@ describe('user', () => {
 
     it('should give a notice when no rooms are available for a date', () => {
         user1.determineBookingRoomType(bookingsData, roomsData)
-        expect(user1.filterBookingsByDate('2022/01/07')).to.equal(false)
-    })
-
-    it('should filter bookings by room type', () => {
-        user1.determineBookingRoomType(bookingsData, roomsData)
-        user1.filterRoomByRoomType('residential suite')
-        expect(user1.filteredBookings).to.deep.equal([
-            {
-            bookingId: '5fwrgu4i7k55hl6sz',
-            userId: 9,
-            roomNumber: 15,
-            roomType: 'residential suite',
-            bidet: false,
-            bedSize: 'full',
-            numBeds: 1,
-            costPerNight: 294.56,
-            date: '2022/04/22'
-            },
-            {
-            bookingId: "5fwrgu4i7k55hl6t9",
-            userId: 38,
-            roomNumber: 14,
-            roomType: "residential suite",
-            bidet: false,
-            bedSize: "twin",
-            numBeds: 1,
-            costPerNight: 457.88,
-            date: "2022/02/14",
-            },
-            {
-            bookingId: "5fwrgu4i7k55hl6td",
-            userId: 27,
-            roomNumber: 20,
-            roomType: "residential suite",
-            bidet: false,
-            bedSize: "queen",
-            numBeds: 1,
-            costPerNight: 343.95,
-            date: "2022/01/31",
-            }
-        ])
-    })
-
-    // it('should give a notice when no rooms are available for a roomtype on a date', () => {
-    //     user1.determineBookingRoomType(bookingsData, roomsData)
-    //     user1.filterRoomByRoomType('residential suite')
-    //     user1.filterBookingsByDate('2022/01/10')
-    //     expect(user1.filteredBookings).to.equal(
-    //         `Sorry no rooms are available, please adjust the date or room type`
-    //         )
-    // })
-
-    it('should remove booking from filtered list when booked', () => {
-        user1.determineBookingRoomType(bookingsData, roomsData)
-        user1.filterRoomByRoomType('residential suite')
-        user1.bookRoom('5fwrgu4i7k55hl6sz')
-        expect(user1.filteredBookings).to.deep.equal([
-            {
-                bookingId: "5fwrgu4i7k55hl6t9",
-                userId: 38,
-                roomNumber: 14,
-                roomType: "residential suite",
-                bidet: false,
-                bedSize: "twin",
-                numBeds: 1,
-                costPerNight: 457.88,
-                date: "2022/02/14",
-                },
-                {
-                bookingId: "5fwrgu4i7k55hl6td",
-                userId: 27,
-                roomNumber: 20,
-                roomType: "residential suite",
-                bidet: false,
-                bedSize: "queen",
-                numBeds: 1,
-                costPerNight: 343.95,
-                date: "2022/01/31",
-            }
-        ])
+        expect(user1.filterByDateAndOrRoomType('2022/01/24', 'single room')).to.equal(false)
     })
 })

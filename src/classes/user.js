@@ -10,42 +10,51 @@ class User {
         this.error = ''
     }
 
-    filterBookingsByDate(date) {
-        const bookingTest = this.bookingRoomDetails.some(booking => booking.date === date)
-        // const filteredBookingTest = this.filteredBookings.some(filteredBooking => filteredBooking.date === date)
+    // filterBookingsByDate(date) {
+    //     const bookingTest = this.bookingRoomDetails.some(booking => booking.date === date)
+    //     if(bookingTest) {
+    //         return this.filteredBookings = this.bookingRoomDetails.filter(room => 
+    //             room.date === date
+    //         )
+    //     }
+    //     else {
+    //         return false
+    //     }
+    // }
+
+    // filterRoomByRoomType(roomType) {
+    //     const bookingTest = this.bookingRoomDetails.some(booking => booking.roomType === roomType)
+    //     console.log(bookingTest)
+    //     if(bookingTest) {
+    //         return this.filteredBookings = this.bookingRoomDetails.filter(room => 
+    //             room.roomType === roomType
+    //         )
+    //     }
+    //     else {
+    //         return false
+    //     }
+    // }
+    
+    filterByDateAndOrRoomType(date, roomType) {
+        const bookingTest = this.bookingRoomDetails.some(booking => booking.date === date && booking.roomType === roomType)
         if(bookingTest) {
             return this.filteredBookings = this.bookingRoomDetails.filter(room => 
-                room.date === date
+                room.date === date && room.roomType === roomType
             )
-        }
-        else {
+        }else {
             return false
         }
     }
 
-    filterRoomByRoomType(roomType) {
-        const bookingTest = this.bookingRoomDetails.some(booking => booking.roomType === roomType)
-        console.log(bookingTest)
-        if(bookingTest) {
-            return this.filteredBookings = this.bookingRoomDetails.filter(room => 
-                room.roomType === roomType
-            )
-        }
-        else {
-            return false
-        }
-    }
-
-    // return this.filteredBookings = this.bookingRoomDetails.filter(room => 
-    //     room.roomType === roomType
-    // )
     userExpenseTotal() {
         const totalCost = this.roomsBooked.reduce((sum, room) => {
             let total = sum + room.costPerNight
             return total
         }, 0)
-        this.expenses = totalCost
-        return totalCost
+        //this.expenses = totalCost
+        //parseint give whole numbers
+        //i personally want two decimal places
+        return this.expenses = totalCost.toFixed(2)
     }
 
     determineBookingRoomType(bookingsData, roomsData) {

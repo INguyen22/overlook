@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Overlook user page to reserve and see upcoming bookings">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Courgette&display=swap" rel="stylesheet">
   <title>Overlook</title>
 </head>
@@ -35,15 +36,18 @@
           <label for="check-in">Check-In Date
             <input type="date" id='calenderInput' data-date-format="MM DD YYYY" required></input>
           </label>
-          <button class="search-button">search</button>
-          <label for="filter-rooms">Filter Rooms:</label>
-          <select class="rooms" name="rooms">
-            <!-- <option disabled hidden selected>Room Type</option> -->
-            <!-- remove when getting rooms  -->
-            <!-- <option value="room">RoomTypeHere</option> -->
-            <!-- remove when getting rooms  -->
-          </select>
-          <button class="filter-room-input">submit</button>
+          <!-- <button class="search-button">search</button> -->
+          <section class="filter-rooms-input">
+            <label for="filter-rooms">Room Type:</label>
+            <select class="rooms" name="rooms">
+              <!-- <option disabled hidden selected>Room Type</option> -->
+              <!-- remove when getting rooms  -->
+              <!-- <option value="room">RoomTypeHere</option> -->
+              <!-- remove when getting rooms  -->
+            </select>
+            <button class="search-button">search</button>
+            <!-- <button class="clear-room-input">clear</button> -->
+          </section>
         </section>
         <h3 class="available-rooms">Available Rooms</h3>
         <p class="error-message"></p>
