@@ -137,7 +137,7 @@ header {
   flex-direction: column;
   background-color: rgba(251, 251, 251, 0.3);
   border-style: outset;
-  height: 90%;
+  height: 82%;
   margin-top: 5px;
   margin-left: 3%;
   overflow-y: auto;
@@ -168,7 +168,7 @@ aside {
   flex-direction: column;
   background-color: rgba(251, 251, 251, 0.3);
   border-style: outset;
-  height: 691px;
+  height: 642px;
   width: 77%;
   margin-right: 3%;
   overflow-y: auto;
@@ -236,7 +236,7 @@ aside {
 .error-message {
   margin-left: 80px;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 17px;
   color: red;
 }
 
