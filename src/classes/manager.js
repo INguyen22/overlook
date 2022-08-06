@@ -1,25 +1,22 @@
 class Manager {
-    constructor(dateDetails) {
-        this.roomsAvaiable = dateDetails.roomsAvaiable
-        this.revenue = dateDetails.revenue
-        this.occupiedRooms = dateDetails.occupiedRooms //in percent
+    constructor() {
+        this.roomsAvaiable = 0
+        this.revenue = 0
+        this.occupiedRooms = 0 //in percent
         this.guests = []
         this.guestsBookings = []
         this.availableRooms = []
     }
-    calculateTotalRevenueForDate() {
-        
-    }
 
-    occupiedRoomsForDate() {
+    occupiedRoomsForDate(date) {
 
     }
 
-    availableRoomsForDate() {
+    availableRoomsForDate(date) {
 
     }
 
-    deleteBookingForGuest() {
+    deleteBookingForGuest(date) {
 
     }
 }
