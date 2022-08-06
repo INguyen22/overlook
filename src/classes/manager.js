@@ -7,12 +7,18 @@ class Manager {
         this.guestsBookings = []
         this.availableRooms = []
     }
-    findGuest() {
+    calculateTotalRevenueForDate() {
+        
+    }
+
+    occupiedRoomsForDate() {
 
     }
-    addBookingForGuest() {
+
+    availableRoomsForDate() {
 
     }
+
     deleteBookingForGuest() {
 
     }

@@ -11,8 +11,6 @@ import Rooms from './classes/rooms.js'
 import User from './classes/user.js'
 import Manager from './classes/manager.js'
 
-// console.log('This is the JavaScript entry file - your code begins here.');
-
 //login-page querySelectors
 const loginPage = document.querySelector('.login-page')
 const username = document.querySelector('#userLoginValue')
@@ -33,6 +31,7 @@ const roomTypeSelection = document.querySelector('select')
 //manager-page querySelectors
 const managerPage = document.querySelector('.manager-page')
 const managerLogOut = document.querySelector('.manager-logout-button')
+const todaysDate = document.querySelector('.today-stats')
 //global variables
 let allCustomersData;
 let clients = []
@@ -42,6 +41,8 @@ let allRoomsData;
 let allBookingsData;
 let selectedDate;
 let roomNumber;
+let currentDay;
+
 //event listeners
 window.addEventListener('load', function() {
     allCustomersFetch()
@@ -151,6 +152,9 @@ function login(event) {
         else if(username.value === "manager" && password.value === "overlook2021") {
             hide(loginPage)
             show(managerPage)
+            currentDate()
+            todaysDate.innerText = `${currentDay}'s Stats`
+            //console.log('current day', )
         }
         else {
             show(incorrentLoginText)
@@ -235,6 +239,22 @@ function bookRoom(event) {
     updatePastAndUpcomingBookingsContainer()
     calculateClientExpenses()
 }
+
+function currentDate() {
+    let date = new Date().toLocaleDateString()
+    const splitDate = date.split("/")
+    const reverseDate = splitDate.reverse()
+    const joinDate = reverseDate.join('/')
+    // console.log(reverseDate)
+    currentDay = joinDate
+}
+
+
+
+function findGuest(guestName) {
+    return customerInfo = clients.find(client => client.name === guestName)
+}
+        
 
 function updateAvailableContainer() {
     availableRoomsContainer.innerHTML = ''
