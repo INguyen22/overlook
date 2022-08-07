@@ -69,12 +69,9 @@ searchBookingsButton2.addEventListener('click', managerBookRoom)
 availableRoomsContainer.addEventListener('click', function(event) {
     bookRoom(event)
 })
-// guestAvailableRoomsContainer.addEventListener('click', function(event) {
-//     bookRoom(event)
-// })
-// guestPastAndUpcomingBookingContainer.addEventListener('click', function(event) {
-//     deleteRoom(event)
-// })
+guestPastAndUpcomingBookingContainer.addEventListener('click', function(event) {
+    deleteRoom(event)
+})
 findGuestSubmitButton.addEventListener('click', findGuest)
 //fetch functions
 function allCustomersFetch() {
@@ -139,6 +136,23 @@ function addBookingsPost() {
     })
 }
 
+function deleteBookingsFetch(bookingId) {
+    fetch(`http://localhost:3001/api/v1/bookings/${bookingId}`, {
+        method:'DELETE',
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('There was an error removing a reservation, try again')
+        } else {
+            managerErrorMessage.innerHTML = ''
+            return response.json()
+        }
+    })
+    .then(() => bookingsFetch())
+    .catch(err => {
+      managerErrorMessage.innerHTML = `${err.message}`
+  })
+}
 //event handlers
 function clientGenerator() {
     let customer = allCustomersData.forEach(customer => {
@@ -251,12 +265,26 @@ function managerBookRoom(event) {
     event.preventDefault()
     let dateInput = managerCalenderInput.value.split("-")
     selectedDate = dateInput.join("/")
+    console.log('date', selectedDate)
     roomNumber = parseInt(guestRoomTypeOptions.options[guestRoomTypeOptions.selectedIndex].text)
-    console.log(roomNumber)
     addBookingsPost()
     currentClient.determineUserPastBookings()
+    console.log('clinet booking', currentClient.roomsBooked)
     updateGuestPastAndUpcomingBookings()
     calculateClientExpenses()
+    // location.reload()
+}
+
+function deleteRoom(event) {
+    console.log('hi')
+    console.log(event.target.classList)
+    console.log(event.target.id)
+    if(event.target.classList.contains(`manager-delete-booking`)) {
+        deleteBookingsFetch(event.target.id)
+        currentClient.determineUserPastBookings()
+        updateGuestPastAndUpcomingBookings()
+        calculateClientExpenses()
+    }
 }
 
 function currentDate() {
@@ -274,24 +302,6 @@ function findGuest(event) {
     updateGuestPastAndUpcomingBookings()
     calculateClientExpenses()
 }
-
-// function updateGuestAvailableBookings() {
-//     guestAvailableRoomsContainer.innerHTML = ''
-//     currentClient.filteredBookings.forEach(filteredBooking => {
-//         guestAvailableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
-//         <section class="room-info">
-//           <p class="room-spec" id="${filteredBooking.bookingId}">Room Type: ${filteredBooking.roomType}</p>
-//           <p class="room-spec" id="room-detail-title">Room Details:</p>
-//           <p class="room-spec" id="room-bed-info">Bed size: ${filteredBooking.bedSize} [x${filteredBooking.numBeds}]</p>
-//           <p class="room-spec" id="room-date-info">Available Date: ${filteredBooking.date}</p>
-//         </section>
-//         <section class="rates-and-book">
-//           <p class="room-spec" id="rates">$${filteredBooking.costPerNight} per night</p>
-//           <button class="book" id='${filteredBooking.bookingId}'>Book</button>
-//         </section>
-//       </section>`
-//     })
-// }
 
 function updateGuestPastAndUpcomingBookings() {
     guestPastAndUpcomingBookingContainer.innerHTML = ''
@@ -420,7 +430,6 @@ function resetAndReFetch() {
     guestExpenseMessage.innerText = `Guest total expenses: $0.00`
     availableRoomsContainer.innerHTML = ``
     pastAndUpcomingBookingContainer.innerHTML = ``
-    guestAvailableRoomsContainer.innerHTML = ''
     guestPastAndUpcomingBookingContainer.innerHTML = ''
     allCustomersFetch()
     roomsFetch()
