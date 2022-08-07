@@ -313,7 +313,7 @@ function renderRoomsBookedOnCurrentDate() {
     const roomsBooked = clients.forEach(client => {
         client.bookingRoomDetails.forEach(booking => {
             //need current date to be in format og yyyy/mm/dd
-            if(booking.date === "2023/12/22") {
+            if(booking.date === "2022/02/16") {
                 roomsBookedOnDay.push(booking)
             }
         })
