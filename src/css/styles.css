@@ -27,7 +27,7 @@ h1 {
   margin-bottom: 70px;
 }
 
-form {
+.login-form {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -262,6 +262,7 @@ aside {
    grid-column-end: 7;
    
 }
+
 .hotel-stats {
    display: flex;
    flex-direction: column;
@@ -276,7 +277,8 @@ aside {
    grid-column-end: 3;
    
 }
-.find-guest-content {
+
+/* .find-guest-content {
    background-color: #bfd8bd; 
    font-size: 25px;
    padding-left: 43%;
@@ -286,16 +288,31 @@ aside {
    grid-row-end: 3;
    grid-column-end: 7;
    
-}
+} */
 .guest-check-in-info {
-   background-color: #98c9a3; 
-   grid-row-start: 3;
-   grid-column-start: 3;
-
-   grid-row-end: 6;
-   grid-column-end: 5;
-   
+  display: flex;
+  font-size: 21px;
+  font-weight: bold;
+  background-color: #98c9a3;
+  grid-row-start: 3;
+  grid-column-start: 3;
+  grid-row-end: 6;
+  grid-column-end: 5;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
 }
+
+.manager-booking-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  height: 256px;
+  width: 300px;
+  justify-content: space-evenly;
+}
+
 .guest-bookings {
    background-color: #77bfa3; 
    grid-row-start: 3;
@@ -308,6 +325,12 @@ aside {
 
 .guest-expenses {
   font-size: 20px;
+  margin-right: 23%;
+  margin-bottom: 0%;
+}
+
+.booking-form-header {
+  font-size: 35px;
 }
 
 .hidden {
