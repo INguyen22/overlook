@@ -11,8 +11,6 @@ import Rooms from './classes/rooms.js'
 import User from './classes/user.js'
 import Manager from './classes/manager.js'
 
-// console.log('This is the JavaScript entry file - your code begins here.');
-
 //login-page querySelectors
 const loginPage = document.querySelector('.login-page')
 const username = document.querySelector('#userLoginValue')
@@ -25,14 +23,26 @@ const userLogOut = document.querySelector('.user-logout-button')
 const welcomeUserMessage = document.querySelector('.welcome-user')
 const userExpenseMessage = document.querySelector('.user-expenses')
 const calenderInput = document.querySelector('#calenderInput')
-const searchDateButton = document.querySelector('.search-button')
+const searchBookingsButton = document.querySelector('.search-button')
 const errorMessage = document.querySelector('.error-message')
 const availableRoomsContainer = document.querySelector('.rooms-container')
 const pastAndUpcomingBookingContainer = document.querySelector(".user-bookings-container")
-const roomTypeSelection = document.querySelector('select')
+const roomTypeSelection = document.querySelector('#user-roomtype-options')
 //manager-page querySelectors
 const managerPage = document.querySelector('.manager-page')
 const managerLogOut = document.querySelector('.manager-logout-button')
+const todaysDate = document.querySelector('.today-stats')
+const occupiedRoomsStats = document.querySelector('#occupiedRooms')
+const revenueStats = document.querySelector('#totalRevenue')
+const roomsAvailableStats = document.querySelector('#roomsAvailable')
+const findGuestInput = document.querySelector('#findGuestInput')
+const findGuestSubmitButton = document.querySelector('.search-guest-button')
+const guestAvailableRoomsContainer = document.querySelector('.guest-rooms-container')
+const guestPastAndUpcomingBookingContainer = document.querySelector('.guest-bookings-container')
+const guestExpenseMessage = document.querySelector('.guest-expenses')
+const searchBookingsButton2 = document.querySelector('.search-button2')
+const guestRoomTypeOptions = document.querySelector('#guest-roomtype-options')
+const managerCalenderInput = document.querySelector('#managerCalenderInput')
 //global variables
 let allCustomersData;
 let clients = []
@@ -42,6 +52,9 @@ let allRoomsData;
 let allBookingsData;
 let selectedDate;
 let roomNumber;
+let currentDay;
+let roomsBookedOnDay = []
+
 //event listeners
 window.addEventListener('load', function() {
     allCustomersFetch()
@@ -51,10 +64,24 @@ window.addEventListener('load', function() {
 loginButton.addEventListener('click', login)
 userLogOut.addEventListener('click', userLogOutFunction)
 managerLogOut.addEventListener('click', managerLogOutFunction)
-searchDateButton.addEventListener('click', showAvailableRoomsByDateandRoomType)
-// roomTypeSubmitButton.addEventListener('click', showAvailableRoomsByRoomType)
+searchBookingsButton.addEventListener('click', function() {
+    showAvailableRoomsByDateandRoomType(calenderInput)
+})
+searchBookingsButton2.addEventListener('click', function() {
+    showAvailableRoomsByDateandRoomType(managerCalenderInput)
+})
 availableRoomsContainer.addEventListener('click', function(event) {
     bookRoom(event)
+})
+guestAvailableRoomsContainer.addEventListener('click', function(event) {
+    bookRoom(event)
+})
+// guestPastAndUpcomingBookingContainer.addEventListener('click', function(event) {
+//     deleteRoom(event)
+// })
+findGuestSubmitButton.addEventListener('click', function() {
+    findGuest()
+    console.log(currentClient)
 })
 //fetch functions
 function allCustomersFetch() {
@@ -129,6 +156,7 @@ function changeBookingData(bookingsData, roomsData) {
     const changeBookingDetails = clients.forEach(client => {
         client.determineBookingRoomType(bookingsData, roomsData)
     })
+    // console.log(changeBookingDetails)
     return changeBookingDetails
 }
 
@@ -151,6 +179,14 @@ function login(event) {
         else if(username.value === "manager" && password.value === "overlook2021") {
             hide(loginPage)
             show(managerPage)
+            currentDate()
+            changeBookingData(allBookingsData, allRoomsData)
+            displayRoomTypeOptions()
+            renderRoomsBookedOnCurrentDate()
+            calculateTotalRevenueForDate()
+            availableRoomsStats()
+            todaysDate.innerText = `${currentDay}'s Stats`
+            occupiedRoomsStats.innerText = `Occupied Rooms: ${(roomsBookedOnDay.length/allRoomsData.length)*100}%`
         }
         else {
             show(incorrentLoginText)
@@ -159,18 +195,9 @@ function login(event) {
 }
 
 function showPastBookings() {
+    clients.forEach(client => client.determineUserPastBookings())
     console.log('new client', currentClient)
-    currentClient.determineUserPastBookings()
-    pastAndUpcomingBookingContainer.innerHTML = ''
-    // console.log('clientBookedRooms', currentClient.bookingRoomDetails)
-    currentClient.roomsBooked.forEach(bookedRoom => {
-        pastAndUpcomingBookingContainer.innerHTML += `<section tabindex="0" class="user-booking-details">
-        <p class="room-spec2" id="date-booked">Date Booked: ${bookedRoom.date}</p>
-        <p class="room-spec2" id="room-detail-title">Room Details:</p>
-        <p class="room-spec2" id="room-bed-info">Bed size: ${bookedRoom.bedSize} [x${bookedRoom.numBeds}]</p>
-        <p class="room-spec2" id="rates2"> Cost: $${bookedRoom.costPerNight} per night</p>
-      </section>`
-    })
+    updatePastAndUpcomingBookingsContainer()
     calculateClientExpenses()
 }
 
@@ -178,10 +205,11 @@ function calculateClientExpenses() {
     let expenses = currentClient.userExpenseTotal()
     //console.log('expenses', expenses)
     userExpenseMessage.innerText = `Your total expenses: $${expenses}`
+    guestExpenseMessage.innerText = `Guest total expenses: $${expenses}`
 }
 
-function showAvailableRoomsByDateandRoomType() {
-    let dateInput = calenderInput.value.split("-")
+function showAvailableRoomsByDateandRoomType(dateValue) {
+    let dateInput = dateValue.value.split("-")
         selectedDate = dateInput.join("/")
         console.log('select date', selectedDate)
     let availableRooms = currentClient.filterByDateAndOrRoomType(selectedDate, roomTypeSelection.options[roomTypeSelection.selectedIndex].text)
@@ -192,23 +220,14 @@ function showAvailableRoomsByDateandRoomType() {
     // console.log('available rooms by roomdate', availableRooms)
     // console.log('current Client filtered rooms', currentClient.filteredBookings)
     errorMessage.innerText = ''
-    availableRoomsContainer.innerHTML = ''
-    availableRooms.forEach(availableRoom => {
-        availableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
-        <section class="room-info">
-          <p class="room-spec" id="${availableRoom.bookingId}">Room Type: ${availableRoom.roomType}</p>
-          <p class="room-spec" id="room-detail-title">Room Details:</p>
-          <p class="room-spec" id="room-bed-info">Bed size: ${availableRoom.bedSize} [x${availableRoom.numBeds}]</p>
-          <p class="room-spec" id="room-date-info">Available Date: ${availableRoom.date}</p>
-        </section>
-        <section class="rates-and-book">
-          <p class="room-spec" id="rates">$${availableRoom.costPerNight} per night</p>
-          <button class="book" id='${availableRoom.bookingId}'>Book</button>
-        </section>
-      </section>`
-        })
+    updateAvailableContainer()
+    updateGuestAvailableBookings()
     }
 }
+
+// function managerShowAvailableRoomsByDateAndRoomType() {
+//     let dateInput = managerCalenderInput.value.split("-")
+// }
 
 function displayRoomTypeOptions() {
     let roomTypes = allRoomsData.map(room => room.roomType)
@@ -216,9 +235,13 @@ function displayRoomTypeOptions() {
         return roomTypes.indexOf(roomType) === index
     })
     roomTypeSelection.innerHTML = ''
+    guestRoomTypeOptions.innerHTML = ''
     uniqueRoomTypes.forEach(roomType => {
         // <option disabled hidden selected>Room Type</option>
         roomTypeSelection.innerHTML += `
+        <option value="${roomType}">${roomType}</option>`
+
+        guestRoomTypeOptions.innerHTML += `
         <option value="${roomType}">${roomType}</option>`
     })
 }
@@ -233,8 +256,104 @@ function bookRoom(event) {
     addBookingsPost()
     updateAvailableContainer()
     updatePastAndUpcomingBookingsContainer()
+    updateGuestAvailableBookings()
+    updateGuestPastAndUpcomingBookings()
     calculateClientExpenses()
 }
+
+function currentDate() {
+    let date = new Date().toLocaleDateString()
+    const splitDate = date.split("/")
+    const reverseDate = splitDate.reverse()
+    const joinDate = reverseDate.join('/')
+    // console.log(reverseDate)
+    currentDay = joinDate
+}
+
+function findGuest() {
+    currentClient = clients.find(client => client.name.toLowerCase() === findGuestInput.value.toLowerCase())
+    currentClient.determineUserPastBookings()
+    updateGuestPastAndUpcomingBookings()
+    calculateClientExpenses()
+}
+
+function updateGuestAvailableBookings() {
+    guestAvailableRoomsContainer.innerHTML = ''
+    currentClient.filteredBookings.forEach(filteredBooking => {
+        guestAvailableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
+        <section class="room-info">
+          <p class="room-spec" id="${filteredBooking.bookingId}">Room Type: ${filteredBooking.roomType}</p>
+          <p class="room-spec" id="room-detail-title">Room Details:</p>
+          <p class="room-spec" id="room-bed-info">Bed size: ${filteredBooking.bedSize} [x${filteredBooking.numBeds}]</p>
+          <p class="room-spec" id="room-date-info">Available Date: ${filteredBooking.date}</p>
+        </section>
+        <section class="rates-and-book">
+          <p class="room-spec" id="rates">$${filteredBooking.costPerNight} per night</p>
+          <button class="book" id='${filteredBooking.bookingId}'>Book</button>
+        </section>
+      </section>`
+    })
+}
+
+function updateGuestPastAndUpcomingBookings() {
+    guestPastAndUpcomingBookingContainer.innerHTML = ''
+    currentClient.roomsBooked.forEach(booking => {
+        guestPastAndUpcomingBookingContainer.innerHTML += `<section class="guest-booking-details">
+        <p class="room-spec2" id="date-booked">Date Booked: ${booking.date}</p>
+        <p class="room-spec2" id="room-detail-title">Room Details:</p>
+        <p class="room-spec2" id="room-bed-info">Bed size: ${booking.bedSize} [x${booking.numBeds}]</p>
+        <p class="room-spec2" id="rates2"> Cost: $${booking.costPerNight} per night</p>
+        <button class="manager-delete-booking" id=${booking.bookingId}>Delete</button>
+      </section>`
+    })
+}
+
+function renderRoomsBookedOnCurrentDate() {
+    //console.log('cleinets', clients)
+    const roomsBooked = clients.forEach(client => {
+        client.bookingRoomDetails.forEach(booking => {
+            //need current date to be in format og yyyy/mm/dd
+            if(booking.date === "2022/02/16") {
+                roomsBookedOnDay.push(booking)
+            }
+        })
+    })
+    //console.log('rooms booked on day', roomsBookedOnDay)
+    const uniqueBookedRooms = []
+    const unique = roomsBookedOnDay.filter(room => {
+        const isDuplicate = uniqueBookedRooms.includes(room.bookingId)
+        if(!isDuplicate) {
+            uniqueBookedRooms.push(room.bookingId)
+            return true
+        }
+        return false
+    })
+    //console.log('unique rooms booked on daye', unique)
+    return roomsBookedOnDay = unique
+}
+
+function availableRoomsStats() {
+    const uniqueRoomNumber = []
+    const uniqueRoomNumbers = roomsBookedOnDay.filter(room => {
+        const isDuplicateRoomNumber = uniqueRoomNumber.includes(room.roomNumber)
+        if(!isDuplicateRoomNumber) {
+            uniqueRoomNumber.push(room.roomNumber)
+            return true
+        }
+        return false
+    })
+    //console.log('unique room nums should be 2', uniqueRoomNumbers)
+    return roomsAvailableStats.innerText = `Rooms Available: ${allRoomsData.length - uniqueRoomNumbers.length}`
+}
+
+function calculateTotalRevenueForDate() {
+   const revenue = roomsBookedOnDay.reduce((sum, room) => {
+        let total = sum + room.costPerNight
+        return total
+   }, 0)
+   return revenueStats.innerText = `Total Revenue: $${revenue.toFixed(2)}`
+}
+        
 
 function updateAvailableContainer() {
     availableRoomsContainer.innerHTML = ''
@@ -270,23 +389,33 @@ function userLogOutFunction() {
     hide(userMainPage)
     show(loginPage)
     hide(incorrentLoginText)
-    clients = []
-    availableRoomsContainer.innerHTML = ''
-    pastAndUpcomingBookingContainer.innerHTML = ''
-    allCustomersFetch()
-    roomsFetch()
-    bookingsFetch()
+    resetAndReFetch()
 }
 
 function managerLogOutFunction() {
     hide(managerPage)
     show(loginPage)
     hide(incorrentLoginText)
+    resetAndReFetch()
 }
 
 function displayClientDetails(client) {
     welcomeUserMessage.innerText = `Welcome, ${client.name}`
     userExpenseMessage.innerText = `Your total expenses: $${client.expenses}`
+}
+
+function resetAndReFetch() {
+    clients = []
+    currentClient = ''
+    userExpenseMessage.innerText = `Your total expenses: $0.00`
+    guestExpenseMessage.innerText = `Guest total expenses: $0.00`
+    availableRoomsContainer.innerHTML = ``
+    pastAndUpcomingBookingContainer.innerHTML = ``
+    guestAvailableRoomsContainer.innerHTML = ''
+    guestPastAndUpcomingBookingContainer.innerHTML = ''
+    allCustomersFetch()
+    roomsFetch()
+    bookingsFetch()
 }
 
 function show(element) {

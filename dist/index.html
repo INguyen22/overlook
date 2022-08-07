@@ -37,7 +37,7 @@
             <input type="date" id='calenderInput' data-date-format="MM DD YYYY" required></input>
           </label>
           <label for="filter-rooms">Room Type:</label>
-          <select class="rooms" name="rooms">
+          <select id="user-roomtype-options"class="rooms" name="rooms">
           </select>
           <button class="search-button">search</button>
         </section>
@@ -69,53 +69,29 @@
       <!-- </section> -->
     <section class="find-guest-content">
       <label for="find-guest">Find Guest</label>
-      <input type="text" placeholder="Guest Name...">
+      <input type="text" id='findGuestInput' placeholder="Guest Name...">
       <button type="submit" class="search-guest-button">search</button>
+      <h3 class="guest-expenses">Guest total expenses: $0.00</h3>
     </section>
     <section class="guest-check-in-info">
       <section class="guest-booking-and-filtering">
         <label for="check-in">Check-In Date</label>
-        <input type="date" data-date-format="MM DD YYYY"></input>
-        <button class="search-button">search</button>
-        <label for="filter-rooms">Filter Rooms:</label>
-        <select id="rooms" name="rooms">
-            <!-- remove when getting rooms  -->
+        <input type="date" id="managerCalenderInput" data-date-format="MM DD YYYY"></input>
+        <label for="filter-rooms">Room Type:</label>
+        <select id="guest-roomtype-options" class="rooms" name="rooms">
+          <!-- remove when getting rooms  -->
           <option value="room">RoomTypeHere</option>
-            <!-- remove when getting rooms  -->
+          <!-- remove when getting rooms  -->
         </select>
-        <input class="filter-room-input" type="submit">
+        <button class="search-button2">search</button>
       </section>
         <h3 class="guest-available-rooms">Available Rooms</h3>
-        <container class="rooms-container">
-          <!-- remove when getting room data -->
-          <section class="guest-room-details-and-book-container">
-            <section class="room-info">
-              <p class="room-spec" id="room-type">Room Type: single</p>
-              <p class="room-spec" id="room-detail-title">Room Details:</p>
-              <p class="room-spec" id="room-bed-info">Bed size: size [x1]</p>
-              <p class="room-spec" id="room-view-info">view</p>
-            </section>
-            <section class="rates-and-book">
-              <p class="room-spec" id="rates">$0.00 per night</p>
-              <button class="book">Book</button>
-            </section>
-          </section>
-          <!-- remove when getting room data -->
+        <container class="guest-rooms-container">
         </container>
       </section>
       <aside class="guest-bookings">
         <h3 class="guest-bookings-header"> Guest Past and Upcoming bookings</h3>
         <container class="guest-bookings-container"> 
-          <!-- remove when getting room data -->
-          <section class="guest-booking-details">
-            <p class="room-spec2" id="date-booked">Date Booked: mm/dd/yyyy</p>
-            <p class="room-spec2" id="room-detail-title">Room Details:</p>
-            <p class="room-spec2" id="room-bed-info">Bed size: size [x1]</p>
-            <p class="room-spec2" id="room-view-info">view</p>
-            <p class="room-spec2" id="rates2"> Cost: $0.00 per night</p>
-            <button class="manager-delete-booking">Delete</button>
-          </section>
-          <!-- remove when getting room data -->
         </container>
       </aside>
   </section>
