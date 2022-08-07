@@ -6,8 +6,6 @@ import './css/styles.css';
 // An example of how you tell webpack to use an image (also need to link to it in the index.html)
 import './images/turing-logo.png'
 //imported classes
-import Bookings from './classes/bookings.js'
-import Rooms from './classes/rooms.js'
 import User from './classes/user.js'
 import Manager from './classes/manager.js'
 
@@ -37,13 +35,13 @@ const revenueStats = document.querySelector('#totalRevenue')
 const roomsAvailableStats = document.querySelector('#roomsAvailable')
 const findGuestInput = document.querySelector('#findGuestInput')
 const findGuestSubmitButton = document.querySelector('.search-guest-button')
-const guestAvailableRoomsContainer = document.querySelector('.guest-rooms-container')
 const guestPastAndUpcomingBookingContainer = document.querySelector('.guest-bookings-container')
 const guestExpenseMessage = document.querySelector('.guest-expenses')
 const searchBookingsButton2 = document.querySelector('.search-button2')
 const guestRoomTypeOptions = document.querySelector('#guest-roomtype-options')
 const managerCalenderInput = document.querySelector('#managerCalenderInput')
 const managerErrorMessage = document.querySelector('.manager-error-message')
+const loadingAnimation = document.querySelector('.loader')
 //global variables
 let allCustomersData;
 let clients = []
@@ -65,7 +63,10 @@ loginButton.addEventListener('click', login)
 userLogOut.addEventListener('click', userLogOutFunction)
 managerLogOut.addEventListener('click', managerLogOutFunction)
 searchBookingsButton.addEventListener('click', showAvailableRoomsByDateandRoomType)
-searchBookingsButton2.addEventListener('click', managerBookRoom)
+searchBookingsButton2.addEventListener('click', function(event) {
+    managerBookRoom(event)
+    updateGuestDetails()
+})
 availableRoomsContainer.addEventListener('click', function(event) {
     bookRoom(event)
 })
@@ -84,12 +85,6 @@ function allCustomersFetch() {
     })
 }
 
-function singleCustomerFetch() {
-    fetch(`http://localhost:3001/api/v1/customers/<id>`)
-    .then(response => response.json())
-    .then(data => console.log(data))
-}
-
 function roomsFetch() {
     fetch(`http://localhost:3001/api/v1/rooms`)
     .then(response => response.json())
@@ -104,7 +99,7 @@ function bookingsFetch() {
     .then(response => response.json())
     .then(data => {
         allBookingsData = data.bookings
-        //console.log('bookings data', allBookingsData)
+        console.log('bookings data', allBookingsData)
     })
 }
 
@@ -139,6 +134,7 @@ function addBookingsPost() {
 function deleteBookingsFetch(bookingId) {
     fetch(`http://localhost:3001/api/v1/bookings/${bookingId}`, {
         method:'DELETE',
+        headers: {"Content-Type": "application/json"},
     })
     .then(response => {
         if (!response.ok) {
@@ -203,6 +199,16 @@ function login(event) {
     })
 }
 
+function findGuest(event) {
+    event.preventDefault()
+    currentClient = clients.find(client => client.name.toLowerCase() === findGuestInput.value.toLowerCase())
+    currentClient.determineUserPastBookings()
+    updateGuestPastAndUpcomingBookings()
+    calculateClientExpenses()
+    console.log('found guest bookin options', currentClient.bookingRoomDetails)
+    console.log('clinet booking1 find', currentClient.roomsBooked)
+}
+
 function showPastBookings() {
     clients.forEach(client => client.determineUserPastBookings())
     console.log('new client', currentClient)
@@ -231,10 +237,6 @@ function showAvailableRoomsByDateandRoomType() {
     }
 }
 
-// function managerShowAvailableRoomsByDateAndRoomType() {
-//     let dateInput = managerCalenderInput.value.split("-")
-// }
-
 function displayRoomTypeOptions() {
     let roomTypes = allRoomsData.map(room => room.roomType)
     let uniqueRoomTypes = roomTypes.filter((roomType, index) => {
@@ -248,12 +250,10 @@ function displayRoomTypeOptions() {
     })
 }
 
+
 function bookRoom(event) {
     let bookings = currentClient.bookRoom(event.target.id)
-    // console.log('booking', bookings)
-    // console.log('event', event.target.id)
     let specificBooking = bookings.find(booking => booking.bookingId === event.target.id)
-    // console.log('specific', specificBooking)
     roomNumber = specificBooking.roomNumber
     addBookingsPost()
     updateAvailableContainer()
@@ -269,42 +269,46 @@ function managerBookRoom(event) {
     roomNumber = parseInt(guestRoomTypeOptions.options[guestRoomTypeOptions.selectedIndex].text)
     addBookingsPost()
     currentClient.determineUserPastBookings()
-    console.log('clinet booking', currentClient.roomsBooked)
-    updateGuestPastAndUpcomingBookings()
-    calculateClientExpenses()
-    // location.reload()
+    updateGuestDetails()
+    // setTimeout(updateGuestDetails, 2000)
+    // disableElement(searchBookingsButton2)
+    // show(loadingAnimation)
+    console.log('clinet booking2 add', currentClient.roomsBooked)
 }
 
 function deleteRoom(event) {
-    console.log('hi')
-    console.log(event.target.classList)
-    console.log(event.target.id)
     if(event.target.classList.contains(`manager-delete-booking`)) {
         deleteBookingsFetch(event.target.id)
-        currentClient.determineUserPastBookings()
-        updateGuestPastAndUpcomingBookings()
-        calculateClientExpenses()
+        // currentClient.determineUserPastBookings()
+        // console.log('changed client rooms', currentClient.bookingRoomDetails)
+        // updateGuestPastAndUpcomingBookings()
+        // calculateClientExpenses()
+        updateGuestDetails()
+        console.log('allbookings after delete', allBookingsData)
     }
+}
+
+
+function updateGuestDetails() {
+    //guestPastAndUpcomingBookingContainer.innerHTML = ''
+    console.log('changed client rooms', currentClient.bookingRoomDetails)
+    updateGuestPastAndUpcomingBookings()
+    calculateClientExpenses()
+    // enableElement(searchBookingsButton2)
+    // hide(loadingAnimation)
 }
 
 function currentDate() {
     let date = new Date().toISOString().split('T')[0]
     const splitDate = date.split("-")
     const joinDate = splitDate.join('/')
-    // console.log(reverseDate)
     currentDay = joinDate
 }
 
-function findGuest(event) {
-    event.preventDefault()
-    currentClient = clients.find(client => client.name.toLowerCase() === findGuestInput.value.toLowerCase())
-    currentClient.determineUserPastBookings()
-    updateGuestPastAndUpcomingBookings()
-    calculateClientExpenses()
-}
-
 function updateGuestPastAndUpcomingBookings() {
+    console.log('bruh')
     guestPastAndUpcomingBookingContainer.innerHTML = ''
+    console.log('update rooms booked?', currentClient.roomsBooked)
     currentClient.roomsBooked.forEach(booking => {
         guestPastAndUpcomingBookingContainer.innerHTML += `<section class="guest-booking-details">
         <p class="room-spec2" id="date-booked">Date Booked: ${booking.date}</p>
@@ -327,17 +331,14 @@ function displayRoomNumbers() {
 }
 
 function renderRoomsBookedOnCurrentDate() {
-    //console.log('cleinets', clients)
     const roomsBooked = clients.forEach(client => {
         client.bookingRoomDetails.forEach(booking => {
-            //need current date to be in format og yyyy/mm/dd
-            // "2022/02/16"
+
             if(booking.date === currentDay) {
                 roomsBookedOnDay.push(booking)
             }
         })
     })
-    //console.log('rooms booked on day', roomsBookedOnDay)
     const uniqueBookedRooms = []
     const unique = roomsBookedOnDay.filter(room => {
         const isDuplicate = uniqueBookedRooms.includes(room.bookingId)
@@ -347,7 +348,6 @@ function renderRoomsBookedOnCurrentDate() {
         }
         return false
     })
-    //console.log('unique rooms booked on daye', unique)
     return roomsBookedOnDay = unique
 }
 
@@ -361,7 +361,6 @@ function availableRoomsStats() {
         }
         return false
     })
-    //console.log('unique room nums should be 2', uniqueRoomNumbers)
     return roomsAvailableStats.innerText = `Rooms Available: ${allRoomsData.length - uniqueRoomNumbers.length}`
 }
 
