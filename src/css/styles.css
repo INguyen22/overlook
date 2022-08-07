@@ -132,7 +132,7 @@ header {
   font-size: 20px;
 }
 
-.rooms-container {
+.rooms-container, .guest-rooms-container {
   display: flex;
   flex-direction: column;
   background-color: rgba(251, 251, 251, 0.3);
@@ -304,6 +304,10 @@ aside {
    grid-row-end: 6;
    grid-column-end: 7;
    
+}
+
+.guest-expenses {
+  font-size: 20px;
 }
 
 .hidden {
