@@ -4,7 +4,7 @@ body {
 
 .login-page {
     font-family: 'Cinzel', serif;
-    background-image: url("../images/resort.png");
+    background-image: url("../images/login-page.png");
     background-size: cover;
     display: flex;
     justify-content: center;
@@ -44,7 +44,7 @@ h1 {
   display: flex;
   flex-direction: column;
   background-color: white;
-  background-image: url("../images/resort2.png");
+  background-image: url("../images/user-page.png");
   background-size: cover;
   justify-content: flex-start;
   align-items: flex-start;
@@ -109,7 +109,7 @@ header {
 .user-expenses {
   font-size: 25px;
   margin-bottom: 0%;
-  margin-left: 62%;
+  margin-left: 45%;
   color: white;
 }
 
