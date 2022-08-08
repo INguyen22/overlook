@@ -3,6 +3,24 @@
 // An example of how you tell webpack to use a CSS (SCSS) file
 import './css/styles.css';
 
+//question to ask heather
+//when i add a booking from the manager page, the current clients bookings
+//doesn't update. 
+//it will update after i logout
+//but when i try to add multiple bookings for a client,
+//the dom doesn't update when i log out and back in
+//it will only update (in the console) when i find my client again
+//my question is then, why is my dom not updating when i post a booking
+//the post DOES work
+//but the dom is not updating
+//noticed: when i run my function to update the dom
+//it seems to run before the post is done updating the server data
+//is there a way to go around it? I know this is a problem 
+//because of async java
+//but i just can't think of any other way to call my functions 
+//so that it will have access to the new posted data from the manager page
+//am i even going in the right direction for the manager page?
+
 // An example of how you tell webpack to use an image (also need to link to it in the index.html)
 import './images/turing-logo.png'
 //imported classes
@@ -98,6 +116,7 @@ function bookingsFetch() {
     .then(response => response.json())
     .then(data => {
         allBookingsData = data.bookings
+        //currentClient.determineUserPastBookings()
         console.log('bookings data', allBookingsData)
     })
 }
@@ -267,7 +286,7 @@ function managerBookRoom(event) {
     console.log('date', selectedDate)
     roomNumber = parseInt(guestRoomTypeOptions.options[guestRoomTypeOptions.selectedIndex].text)
     addBookingsPost()
-    currentClient.determineUserPastBookings()
+    currentClient.determineUserPastBookings()//this uses the old data since the post hasn'r fetched the new bookings data in time
     console.log('allbookingsdata afterpost', allBookingsData)
     // updateGuestDetails()
     updateGuestPastAndUpcomingBookings()
