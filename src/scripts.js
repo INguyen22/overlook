@@ -65,7 +65,6 @@ managerLogOut.addEventListener('click', managerLogOutFunction)
 searchBookingsButton.addEventListener('click', showAvailableRoomsByDateandRoomType)
 searchBookingsButton2.addEventListener('click', function(event) {
     managerBookRoom(event)
-    updateGuestDetails()
 })
 availableRoomsContainer.addEventListener('click', function(event) {
     bookRoom(event)
@@ -269,7 +268,11 @@ function managerBookRoom(event) {
     roomNumber = parseInt(guestRoomTypeOptions.options[guestRoomTypeOptions.selectedIndex].text)
     addBookingsPost()
     currentClient.determineUserPastBookings()
-    updateGuestDetails()
+    console.log('allbookingsdata afterpost', allBookingsData)
+    // updateGuestDetails()
+    updateGuestPastAndUpcomingBookings()
+    calculateClientExpenses()
+    //findGuest(event)
     // setTimeout(updateGuestDetails, 2000)
     // disableElement(searchBookingsButton2)
     // show(loadingAnimation)
@@ -283,15 +286,21 @@ function deleteRoom(event) {
         // console.log('changed client rooms', currentClient.bookingRoomDetails)
         // updateGuestPastAndUpcomingBookings()
         // calculateClientExpenses()
-        updateGuestDetails()
-        console.log('allbookings after delete', allBookingsData)
+       //updateGuestDetails()
+       updateGuestPastAndUpcomingBookings()
+       calculateClientExpenses()
+        // findGuest(event)
+        console.log('allbookingsdata after delete', allBookingsData)
     }
 }
 
 
 function updateGuestDetails() {
     //guestPastAndUpcomingBookingContainer.innerHTML = ''
+    const details = currentClient.determineUserPastBookings()
+    console.log('detaisl', details)
     console.log('changed client rooms', currentClient.bookingRoomDetails)
+    console.log('update rooms booked?', currentClient.roomsBooked)
     updateGuestPastAndUpcomingBookings()
     calculateClientExpenses()
     // enableElement(searchBookingsButton2)
@@ -305,20 +314,6 @@ function currentDate() {
     currentDay = joinDate
 }
 
-function updateGuestPastAndUpcomingBookings() {
-    console.log('bruh')
-    guestPastAndUpcomingBookingContainer.innerHTML = ''
-    console.log('update rooms booked?', currentClient.roomsBooked)
-    currentClient.roomsBooked.forEach(booking => {
-        guestPastAndUpcomingBookingContainer.innerHTML += `<section class="guest-booking-details">
-        <p class="room-spec2" id="date-booked">Date Booked: ${booking.date}</p>
-        <p class="room-spec2" id="room-detail-title">Room Details:</p>
-        <p class="room-spec2" id="room-bed-info">Bed size: ${booking.bedSize} [x${booking.numBeds}]</p>
-        <p class="room-spec2" id="rates2"> Cost: $${booking.costPerNight} per night</p>
-        <button class="manager-delete-booking" id=${booking.bookingId}>Delete</button>
-      </section>`
-    })
-}
 
 function displayRoomNumbers() {
     let roomNumbers = allRoomsData.map(room => room.number)
@@ -327,82 +322,95 @@ function displayRoomNumbers() {
         guestRoomTypeOptions.innerHTML += `
         <option disabled hidden selected>Room Number</option>
         <option value="${roomNumber}">${roomNumber}</option>`
-    )
-}
-
-function renderRoomsBookedOnCurrentDate() {
-    const roomsBooked = clients.forEach(client => {
-        client.bookingRoomDetails.forEach(booking => {
-
-            if(booking.date === currentDay) {
-                roomsBookedOnDay.push(booking)
-            }
+        )
+    }
+    
+    function renderRoomsBookedOnCurrentDate() {
+        const roomsBooked = clients.forEach(client => {
+            client.bookingRoomDetails.forEach(booking => {
+                
+                if(booking.date === currentDay) {
+                    roomsBookedOnDay.push(booking)
+                }
+            })
         })
-    })
-    const uniqueBookedRooms = []
-    const unique = roomsBookedOnDay.filter(room => {
-        const isDuplicate = uniqueBookedRooms.includes(room.bookingId)
-        if(!isDuplicate) {
-            uniqueBookedRooms.push(room.bookingId)
-            return true
-        }
-        return false
-    })
-    return roomsBookedOnDay = unique
-}
+        const uniqueBookedRooms = []
+        const unique = roomsBookedOnDay.filter(room => {
+            const isDuplicate = uniqueBookedRooms.includes(room.bookingId)
+            if(!isDuplicate) {
+                uniqueBookedRooms.push(room.bookingId)
+                return true
+            }
+            return false
+        })
+        return roomsBookedOnDay = unique
+    }
+    
+    function availableRoomsStats() {
+        const uniqueRoomNumber = []
+        const uniqueRoomNumbers = roomsBookedOnDay.filter(room => {
+            const isDuplicateRoomNumber = uniqueRoomNumber.includes(room.roomNumber)
+            if(!isDuplicateRoomNumber) {
+                uniqueRoomNumber.push(room.roomNumber)
+                return true
+            }
+            return false
+        })
+        return roomsAvailableStats.innerText = `Rooms Available: ${allRoomsData.length - uniqueRoomNumbers.length}`
+    }
+    
+    function calculateTotalRevenueForDate() {
+        const revenue = roomsBookedOnDay.reduce((sum, room) => {
+            let total = sum + room.costPerNight
+            return total
+        }, 0)
+        return revenueStats.innerText = `Total Revenue: $${revenue.toFixed(2)}`
+    }
+    
+    
+    function updateAvailableContainer() {
+        availableRoomsContainer.innerHTML = ''
+        currentClient.filteredBookings.forEach(filteredBooking => {
+            availableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
+            <section class="room-info">
+            <p class="room-spec" id="${filteredBooking.bookingId}">Room Type: ${filteredBooking.roomType}</p>
+            <p class="room-spec" id="room-detail-title">Room Details:</p>
+            <p class="room-spec" id="room-bed-info">Bed size: ${filteredBooking.bedSize} [x${filteredBooking.numBeds}]</p>
+            <p class="room-spec" id="room-date-info">Available Date: ${filteredBooking.date}</p>
+            </section>
+            <section class="rates-and-book">
+            <p class="room-spec" id="rates">$${filteredBooking.costPerNight} per night</p>
+            <button class="book" id='${filteredBooking.bookingId}'>Book</button>
+            </section>
+            </section>`
+        })
+    }
+    
+    function updatePastAndUpcomingBookingsContainer() {
+        pastAndUpcomingBookingContainer.innerHTML = ''
+        currentClient.roomsBooked.forEach(booking => {
+            pastAndUpcomingBookingContainer.innerHTML += `<section class="user-booking-details">
+            <p class="room-spec2" id="date-booked">Date Booked: ${booking.date}</p>
+            <p class="room-spec2" id="room-detail-title">Room Details:</p>
+            <p class="room-spec2" id="room-bed-info">Bed size: ${booking.bedSize} [x${booking.numBeds}]</p>
+            <p class="room-spec2" id="rates2"> Cost: $${booking.costPerNight} per night</p>
+            </section>`
+        })
+    }
 
-function availableRoomsStats() {
-    const uniqueRoomNumber = []
-    const uniqueRoomNumbers = roomsBookedOnDay.filter(room => {
-        const isDuplicateRoomNumber = uniqueRoomNumber.includes(room.roomNumber)
-        if(!isDuplicateRoomNumber) {
-            uniqueRoomNumber.push(room.roomNumber)
-            return true
-        }
-        return false
-    })
-    return roomsAvailableStats.innerText = `Rooms Available: ${allRoomsData.length - uniqueRoomNumbers.length}`
-}
-
-function calculateTotalRevenueForDate() {
-   const revenue = roomsBookedOnDay.reduce((sum, room) => {
-        let total = sum + room.costPerNight
-        return total
-   }, 0)
-   return revenueStats.innerText = `Total Revenue: $${revenue.toFixed(2)}`
-}
-        
-
-function updateAvailableContainer() {
-    availableRoomsContainer.innerHTML = ''
-    currentClient.filteredBookings.forEach(filteredBooking => {
-        availableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
-        <section class="room-info">
-          <p class="room-spec" id="${filteredBooking.bookingId}">Room Type: ${filteredBooking.roomType}</p>
-          <p class="room-spec" id="room-detail-title">Room Details:</p>
-          <p class="room-spec" id="room-bed-info">Bed size: ${filteredBooking.bedSize} [x${filteredBooking.numBeds}]</p>
-          <p class="room-spec" id="room-date-info">Available Date: ${filteredBooking.date}</p>
-        </section>
-        <section class="rates-and-book">
-          <p class="room-spec" id="rates">$${filteredBooking.costPerNight} per night</p>
-          <button class="book" id='${filteredBooking.bookingId}'>Book</button>
-        </section>
-      </section>`
-    })
-}
-
-function updatePastAndUpcomingBookingsContainer() {
-    pastAndUpcomingBookingContainer.innerHTML = ''
-    currentClient.roomsBooked.forEach(booking => {
-        pastAndUpcomingBookingContainer.innerHTML += `<section class="user-booking-details">
-        <p class="room-spec2" id="date-booked">Date Booked: ${booking.date}</p>
-        <p class="room-spec2" id="room-detail-title">Room Details:</p>
-        <p class="room-spec2" id="room-bed-info">Bed size: ${booking.bedSize} [x${booking.numBeds}]</p>
-        <p class="room-spec2" id="rates2"> Cost: $${booking.costPerNight} per night</p>
-      </section>`
-    })
-}
-
+    function updateGuestPastAndUpcomingBookings() {
+        guestPastAndUpcomingBookingContainer.innerHTML = ''
+        currentClient.roomsBooked.forEach(booking => {
+            guestPastAndUpcomingBookingContainer.innerHTML += `<section class="guest-booking-details">
+            <p class="room-spec2" id="date-booked">Date Booked: ${booking.date}</p>
+            <p class="room-spec2" id="room-detail-title">Room Details:</p>
+            <p class="room-spec2" id="room-bed-info">Bed size: ${booking.bedSize} [x${booking.numBeds}]</p>
+            <p class="room-spec2" id="rates2"> Cost: $${booking.costPerNight} per night</p>
+            <button class="manager-delete-booking" id=${booking.bookingId}>Delete</button>
+          </section>`
+        })
+    }
+    
 function userLogOutFunction() {
     hide(userMainPage)
     show(loginPage)
