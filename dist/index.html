@@ -20,7 +20,6 @@
       <p class="incorrect-login-text hidden">Username or Password is incorrect, please try again.</p>
     </form>
   </section>
-  <!-- end of loginpage -->
   <section class="user-main-page hidden">
     <header>
       <button class="user-logout-button">Log out <i class="arrow right"> </i></button>
@@ -54,20 +53,17 @@
       </aside>
     </section>
   </section>
-    <!-- end of user section -->
   <section class="manager-page hidden">
     <header class="manager-portal-header">
       <button class="manager-logout-button">Log out <i class="arrow right"> </i></button>
       <h2 class="manager-portal">Manager Portal</h2>
     </header>
-      <!-- <section class="manager-content"> -->
     <section class="hotel-stats">
       <h2 class="today-stats">Today's stats:</h2>
       <p class="stats" id="roomsAvailable">Rooms Available: 999</p>
       <p class="stats" id="occupiedRooms">Occupied Rooms: 999</p>
       <p class="stats" id="totalRevenue">Total Revenue: 999</p>
     </section>
-      <!-- </section> -->
     <section class="find-guest-content">
       <label for="find-guest">Find Guest</label>
       <input type="text" id='findGuestInput' placeholder="Guest Name...">
@@ -86,17 +82,16 @@
         <button class="filter-button-room2">filter</button>
       </section>
       <p class="manager-error-message"></p>
-        <h3 class="guest-available-rooms">Available Rooms</h3>
-        <container class="guest-rooms-container">
-        </container>
-      </section>
+      <h3 class="guest-available-rooms">Available Rooms</h3>
+      <container class="guest-rooms-container">
+      </container>
+    </section>
       <aside class="guest-bookings">
         <h3 class="guest-bookings-header"> Guest Past and Upcoming bookings</h3>
         <container class="guest-bookings-container"> 
         </container>
       </aside>
   </section>
-    <!-- end of manager section -->
   <!-- Do not include the scripts.js or class files here - it is done by the webpack server -->
   <script src="bundle.js"></script>
 
