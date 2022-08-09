@@ -41,7 +41,8 @@ const findGuestSubmitButton = document.querySelector('.search-guest-button')
 const guestAvailableRoomsContainer = document.querySelector('.guest-rooms-container')
 const guestPastAndUpcomingBookingContainer = document.querySelector('.guest-bookings-container')
 const guestExpenseMessage = document.querySelector('.guest-expenses')
-const searchBookingsButton2 = document.querySelector('.search-button2')
+const managerSearchRoomDateButton = document.querySelector('.search-button-date2')
+const managerFilterRoomButton = document.querySelector('.filter-button-room2')
 const guestRoomTypeOptions = document.querySelector('#guest-roomtype-options')
 const managerCalenderInput = document.querySelector('#managerCalenderInput')
 const managerErrorMessage = document.querySelector('.manager-error-message')
@@ -56,6 +57,7 @@ let roomNumber;
 let availableRoomsonDate;
 let currentDay;
 let roomsBookedOnDay = []
+let roomIdFromPost;
 
 //event listeners
 window.addEventListener('load', function() {
@@ -70,9 +72,14 @@ searchBookingsButton.addEventListener('click', function() {
     //showAvailableRoomsByDateandRoomType(calenderInput)
     renderRoomsAvailable(calenderInput)
 })
-filterBookingsButton.addEventListener('click', filterAvailableRoomsByRoomType)
-searchBookingsButton2.addEventListener('click', function() {
-    showAvailableRoomsByDateandRoomType(managerCalenderInput)
+filterBookingsButton.addEventListener('click', function() {
+    filterAvailableRoomsByRoomType(roomTypeSelection.options[roomTypeSelection.selectedIndex].text)
+})
+managerSearchRoomDateButton.addEventListener('click', function() {
+    renderRoomsAvailable(managerCalenderInput)
+})
+managerFilterRoomButton.addEventListener('click', function() {
+    filterAvailableRoomsByRoomType(guestRoomTypeOptions.options[guestRoomTypeOptions.selectedIndex].text)
 })
 availableRoomsContainer.addEventListener('click', function(event) {
     bookRoom(event)
@@ -108,7 +115,7 @@ function roomsFetch() {
 }
 
 function bookingsFetch() {
-    fetch(`http://localhost:3001/api/v1/bookings`)
+    return fetch(`http://localhost:3001/api/v1/bookings`)
     .then(response => response.json())
     .then(data => {
         allBookingsData = data.bookings
@@ -117,9 +124,7 @@ function bookingsFetch() {
 }
 
 function addBookingsPost() {
-    // console.log('current client', currentClient.filteredBookings)
-    // console.log(selectedDate)
-    fetch(`http://localhost:3001/api/v1/bookings`, {
+    return fetch(`http://localhost:3001/api/v1/bookings`, {
         method:'POST',
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ 
@@ -133,11 +138,16 @@ function addBookingsPost() {
           throw new Error('there was an error booking your reservation, Try again')
         } else {
           errorMessage.innerHTML = ''
+          console.log('json', response.Result)
           return response.json()
         }
-      })
-      .then(() => bookingsFetch())
-      .catch(err => {
+    })
+    .then(newBooking => {
+        roomIdFromPost = newBooking.newBooking.id
+        console.log('booking', newBooking.newBooking.id)
+    })
+    .then(() => bookingsFetch())
+    .catch(err => {
         errorMessage.innerHTML = `${err.message}`
     })
 }
@@ -195,10 +205,10 @@ function login(event) {
             show(managerPage)
             currentDate()
             changeBookingData(allBookingsData, allRoomsData)
-            displayRoomTypeOptions()
             renderRoomsBookedOnCurrentDate()
             calculateTotalRevenueForDate()
             availableRoomsStats()
+            displayRoomTypeOptions()
             todaysDate.innerText = `${currentDay}'s Stats`
             occupiedRoomsStats.innerText = `Occupied Rooms: ${(roomsBookedOnDay.length/allRoomsData.length)*100}%`
         }
@@ -223,10 +233,13 @@ function calculateClientExpenses() {
 }
 
 function renderRoomsAvailable(dateValue) {
+    console.log('manager date value', dateValue)
     let dateInput = dateValue.value.split("-")
     selectedDate = dateInput.join("/")
+    console.log('date selected', selectedDate)
     availableRoomsonDate = currentClient.renderAvailableRooms(selectedDate, allBookingsData, allRoomsData)
     availableRoomsContainer.innerHTML = ''
+    guestAvailableRoomsContainer.innerHTML = ''
     if(availableRoomsonDate.length !== 0) {
         availableRoomsonDate.forEach(room => {
             availableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
@@ -241,14 +254,28 @@ function renderRoomsAvailable(dateValue) {
               <button class="book" id='${room.number}'>Book</button>
             </section>
           </section>`
+
+        guestAvailableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
+          <section class="room-info">
+            <p class="room-spec" id="${room.number}">Room Type: ${room.roomType}</p>
+            <p class="room-spec" id="room-detail-title">Room Details:</p>
+            <p class="room-spec" id="room-bed-info">Bed size: ${room.bedSize} [x${room.numBeds}]</p>
+            <p class="room-spec" id="room-date-info">Available Date: ${selectedDate}</p>
+          </section>
+          <section class="rates-and-book">
+            <p class="room-spec" id="rates">$${room.costPerNight} per night</p>
+            <button class="book" id='${room.number}'>Book</button>
+          </section>
+        </section>`
         })
     }
 }
 
-function filterAvailableRoomsByRoomType() {
-    availableRoomsonDate = availableRoomsonDate.filter(room => room.roomType === roomTypeSelection.options[roomTypeSelection.selectedIndex].text)
+function filterAvailableRoomsByRoomType(selection) {
+    let filteredRoomTypes = availableRoomsonDate.filter(room => room.roomType === selection)
     availableRoomsContainer.innerHTML = ''
-    availableRoomsonDate.forEach(room => {
+    guestAvailableRoomsContainer.innerHTML = ''
+    filteredRoomTypes.forEach(room => {
         availableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
         <section class="room-info">
           <p class="room-spec" id="${room.number}">Room Type: ${room.roomType}</p>
@@ -261,6 +288,19 @@ function filterAvailableRoomsByRoomType() {
           <button class="book" id='${room.number}'>Book</button>
         </section>
       </section>`
+
+      guestAvailableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
+      <section class="room-info">
+        <p class="room-spec" id="${room.number}">Room Type: ${room.roomType}</p>
+        <p class="room-spec" id="room-detail-title">Room Details:</p>
+        <p class="room-spec" id="room-bed-info">Bed size: ${room.bedSize} [x${room.numBeds}]</p>
+        <p class="room-spec" id="room-date-info">Available Date: ${selectedDate}</p>
+      </section>
+      <section class="rates-and-book">
+        <p class="room-spec" id="rates">$${room.costPerNight} per night</p>
+        <button class="book" id='${room.number}'>Book</button>
+      </section>
+    </section>`
     })
 }
 
@@ -289,7 +329,6 @@ function displayRoomTypeOptions() {
     roomTypeSelection.innerHTML = ''
     guestRoomTypeOptions.innerHTML = ''
     uniqueRoomTypes.forEach(roomType => {
-        // <option disabled hidden selected>Room Type</option>
         roomTypeSelection.innerHTML += `
         <option disabled hidden selected>Room Type</option>
         <option value="${roomType}">${roomType}</option>`
@@ -301,25 +340,42 @@ function displayRoomTypeOptions() {
 }
 
 function bookRoom(event) {
+    if(event.target.classList.contains('book')) {
     roomNumber = parseInt(event.target.id)
     addBookingsPost()
+    //bookingsFetch()
+    console.log('room num', roomNumber)
     availableRoomsonDate.forEach(room => {
         if(room.number === roomNumber) {
+            room.id = roomIdFromPost
+            console.log('id', roomIdFromPost)
             room.date = selectedDate
             currentClient.roomsBooked.push(room)
             availableRoomsonDate.splice(availableRoomsonDate.indexOf(room), 1)
         }
     })
+    console.log(availableRoomsonDate)
+    bookingsFetch()
     updateAvailableContainer()
     updatePastAndUpcomingBookingsContainer()
-    calculateClientExpenses() 
+    updateGuestAvailableBookings()
+    updateGuestPastAndUpcomingBookings()
+    calculateClientExpenses()
+    }
 }
 
 function deleteRoom(event) {
+    console.log('target', event.target.id)
     if(event.target.classList.contains(`manager-delete-booking`)) {
         deleteBookingsFetch(event.target.id)
-        updateGuestDetails()
-        console.log('allbookingsdata after delete', allBookingsData)
+        console.log(event.target.id)
+        currentClient.roomsBooked.forEach(bookedRoom => {
+            if(bookedRoom.bookingId === event.target.id || event.target.id === undefined) {
+                currentClient.roomsBooked.splice(currentClient.roomsBooked.indexOf(bookedRoom), 1)
+            }
+        })
+    updateGuestPastAndUpcomingBookings()
+    calculateClientExpenses()
     }
 }
 
@@ -356,19 +412,19 @@ function findGuest() {
 
 function updateGuestAvailableBookings() {
     guestAvailableRoomsContainer.innerHTML = ''
-    currentClient.filteredBookings.forEach(filteredBooking => {
+    availableRoomsonDate.forEach(room => {
         guestAvailableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
         <section class="room-info">
-          <p class="room-spec" id="${filteredBooking.bookingId}">Room Type: ${filteredBooking.roomType}</p>
-          <p class="room-spec" id="room-detail-title">Room Details:</p>
-          <p class="room-spec" id="room-bed-info">Bed size: ${filteredBooking.bedSize} [x${filteredBooking.numBeds}]</p>
-          <p class="room-spec" id="room-date-info">Available Date: ${filteredBooking.date}</p>
+        <p class="room-spec" id="${room.number}">Room Type: ${room.roomType}</p>
+        <p class="room-spec" id="room-detail-title">Room Details:</p>
+        <p class="room-spec" id="room-bed-info">Bed size: ${room.bedSize} [x${room.numBeds}]</p>
+        <p class="room-spec" id="room-date-info">Available Date: ${selectedDate}</p>
         </section>
         <section class="rates-and-book">
-          <p class="room-spec" id="rates">$${filteredBooking.costPerNight} per night</p>
-          <button class="book" id='${filteredBooking.bookingId}'>Book</button>
+        <p class="room-spec" id="rates">$${room.costPerNight} per night</p>
+        <button class="book" id='${room.number}'>Book</button>
         </section>
-      </section>`
+        </section>`
     })
 }
 
@@ -380,9 +436,9 @@ function updateGuestPastAndUpcomingBookings() {
         <p class="room-spec2" id="room-detail-title">Room Details:</p>
         <p class="room-spec2" id="room-bed-info">Bed size: ${booking.bedSize} [x${booking.numBeds}]</p>
         <p class="room-spec2" id="rates2"> Cost: $${booking.costPerNight} per night</p>
-        <button class="manager-delete-booking" id=${booking.bookingId}>Delete</button>
+        <button class="manager-delete-booking" id=${roomIdFromPost || booking.bookingId}>Delete</button>
       </section>`
-    })
+        })
 }
 
 function renderRoomsBookedOnCurrentDate() {

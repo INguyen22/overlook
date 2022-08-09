@@ -6,7 +6,6 @@ class User {
         this.bookingRoomDetails = []
         this.roomsBooked = []
         this.expenses = 0
-        //this.availableRoomsonDate = []
         this.filteredBookings = []
         this.error = ''
     }
@@ -31,16 +30,16 @@ class User {
         return this.filteredBookings = roomData.filter(room => room === roomType)
     }
 
-    filterByDateAndOrRoomType(date, roomType) {
-        const bookingTest = this.bookingRoomDetails.some(booking => booking.date === date && booking.roomType === roomType)
-        if(bookingTest) {
-            return this.filteredBookings = this.bookingRoomDetails.filter(room => 
-                room.date === date && room.roomType === roomType
-            )
-        }else {
-            return false
-        }
-    }
+    // filterByDateAndOrRoomType(date, roomType) {
+    //     const bookingTest = this.bookingRoomDetails.some(booking => booking.date === date && booking.roomType === roomType)
+    //     if(bookingTest) {
+    //         return this.filteredBookings = this.bookingRoomDetails.filter(room => 
+    //             room.date === date && room.roomType === roomType
+    //         )
+    //     }else {
+    //         return false
+    //     }
+    // }
 
     userExpenseTotal() {
         const totalCost = this.roomsBooked.reduce((sum, room) => {
@@ -84,20 +83,20 @@ class User {
         return userBookedRooms
     }
 
-    bookRoom(roomId) {
-        const bookRoom = this.bookingRoomDetails.forEach(bookingRoom => {
-            if(bookingRoom.bookingId === roomId) {
-                this.roomsBooked.push(bookingRoom)
-                this.bookingRoomDetails.splice(this.bookingRoomDetails.indexOf(bookingRoom), 1)
-            }
-        })
-        const bookRoom2 = this.filteredBookings.forEach(filteredBooking => {
-            if(filteredBooking.bookingId === roomId) {
-                this.filteredBookings.splice(this.filteredBookings.indexOf(filteredBooking), 1)
-            }
-        })
-        return this.roomsBooked
-    }
+    // bookRoom(roomId) {
+    //     const bookRoom = this.bookingRoomDetails.forEach(bookingRoom => {
+    //         if(bookingRoom.bookingId === roomId) {
+    //             this.roomsBooked.push(bookingRoom)
+    //             this.bookingRoomDetails.splice(this.bookingRoomDetails.indexOf(bookingRoom), 1)
+    //         }
+    //     })
+    //     const bookRoom2 = this.filteredBookings.forEach(filteredBooking => {
+    //         if(filteredBooking.bookingId === roomId) {
+    //             this.filteredBookings.splice(this.filteredBookings.indexOf(filteredBooking), 1)
+    //         }
+    //     })
+    //     return this.roomsBooked
+    // }
 }
 
 export default User
