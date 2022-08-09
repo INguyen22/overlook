@@ -6,40 +6,23 @@ class User {
         this.bookingRoomDetails = []
         this.roomsBooked = []
         this.expenses = 0
-        this.filteredBookings = []
-        this.error = ''
     }
 
     renderAvailableRooms(date, bookingData, roomData) {
-        let numAvailableRooms = bookingData.reduce((arr, booking) => {
+        let numberOfBookedRooms = bookingData.reduce((arr, booking) => {
           if(booking.date === date) {
             arr.push(booking.roomNumber)
           }
           return arr
         }, [])
         let availableRooms = roomData.reduce((arr, room) => {
-          if(!numAvailableRooms.includes(room.number)) {
+          if(!numberOfBookedRooms.includes(room.number)) {
             arr.push(room)
           }
           return arr
         }, [])
         return availableRooms
       }
-
-    filterRoomsByToomType(roomData, roomType) {
-        return this.filteredBookings = roomData.filter(room => room === roomType)
-    }
-
-    // filterByDateAndOrRoomType(date, roomType) {
-    //     const bookingTest = this.bookingRoomDetails.some(booking => booking.date === date && booking.roomType === roomType)
-    //     if(bookingTest) {
-    //         return this.filteredBookings = this.bookingRoomDetails.filter(room => 
-    //             room.date === date && room.roomType === roomType
-    //         )
-    //     }else {
-    //         return false
-    //     }
-    // }
 
     userExpenseTotal() {
         const totalCost = this.roomsBooked.reduce((sum, room) => {
@@ -82,21 +65,6 @@ class User {
         })
         return userBookedRooms
     }
-
-    // bookRoom(roomId) {
-    //     const bookRoom = this.bookingRoomDetails.forEach(bookingRoom => {
-    //         if(bookingRoom.bookingId === roomId) {
-    //             this.roomsBooked.push(bookingRoom)
-    //             this.bookingRoomDetails.splice(this.bookingRoomDetails.indexOf(bookingRoom), 1)
-    //         }
-    //     })
-    //     const bookRoom2 = this.filteredBookings.forEach(filteredBooking => {
-    //         if(filteredBooking.bookingId === roomId) {
-    //             this.filteredBookings.splice(this.filteredBookings.indexOf(filteredBooking), 1)
-    //         }
-    //     })
-    //     return this.roomsBooked
-    // }
 }
 
 export default User
