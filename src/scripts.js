@@ -119,6 +119,7 @@ function bookingsFetch() {
     .then(response => response.json())
     .then(data => {
         allBookingsData = data.bookings
+        console.log('hello')
         //console.log('bookings data', allBookingsData)
     })
 }
@@ -137,6 +138,7 @@ function addBookingsPost() {
         if (!response.ok) {
           throw new Error('there was an error booking your reservation, Try again')
         } else {
+            console.log('hi')
           errorMessage.innerHTML = ''
           console.log('json', response.Result)
           return response.json()
@@ -147,13 +149,14 @@ function addBookingsPost() {
         console.log('booking', newBooking.newBooking.id)
     })
     .then(() => bookingsFetch())
+    //.then(() => update())
     .catch(err => {
         errorMessage.innerHTML = `${err.message}`
     })
 }
 
 function deleteBookingsFetch(bookingId) {
-    fetch(`http://localhost:3001/api/v1/bookings/${bookingId}`, {
+    return fetch(`http://localhost:3001/api/v1/bookings/${bookingId}`, {
         method:'DELETE',
         headers: {"Content-Type": "application/json"},
     })
@@ -339,61 +342,43 @@ function displayRoomTypeOptions() {
     })
 }
 
-function bookRoom(event) {
+async function bookRoom(event) {
     if(event.target.classList.contains('book')) {
-    roomNumber = parseInt(event.target.id)
-    addBookingsPost()
-    //bookingsFetch()
-    console.log('room num', roomNumber)
+        console.log('event target in book', event.target.id)
+        roomNumber = parseInt(event.target.id)
+    await addBookingsPost().then(() => update())
+    }
+}
+
+function update() {
     availableRoomsonDate.forEach(room => {
         if(room.number === roomNumber) {
-            room.id = roomIdFromPost
+            room.bookingId = roomIdFromPost
             console.log('id', roomIdFromPost)
             room.date = selectedDate
             currentClient.roomsBooked.push(room)
             availableRoomsonDate.splice(availableRoomsonDate.indexOf(room), 1)
         }
     })
-    console.log(availableRoomsonDate)
-    bookingsFetch()
     updateAvailableContainer()
     updatePastAndUpcomingBookingsContainer()
     updateGuestAvailableBookings()
     updateGuestPastAndUpcomingBookings()
     calculateClientExpenses()
-    }
 }
 
-function deleteRoom(event) {
-    console.log('target', event.target.id)
+async function deleteRoom(event) {
     if(event.target.classList.contains(`manager-delete-booking`)) {
-        deleteBookingsFetch(event.target.id)
-        console.log(event.target.id)
-        currentClient.roomsBooked.forEach(bookedRoom => {
-            if(bookedRoom.bookingId === event.target.id || event.target.id === undefined) {
-                currentClient.roomsBooked.splice(currentClient.roomsBooked.indexOf(bookedRoom), 1)
-            }
+        await deleteBookingsFetch(event.target.id).then(() => {
+            currentClient.roomsBooked.forEach(bookedRoom => {
+                if(bookedRoom.bookingId === event.target.id) {
+                    currentClient.roomsBooked.splice(currentClient.roomsBooked.indexOf(bookedRoom), 1)
+                }
+            })
+            updateGuestPastAndUpcomingBookings()
+            calculateClientExpenses()
         })
-    updateGuestPastAndUpcomingBookings()
-    calculateClientExpenses()
     }
-}
-
-function updateGuestDetails() {
-    //guestPastAndUpcomingBookingContainer.innerHTML = ''
-    currentClient.determineUserPastBookings()
-    updateGuestAvailableBookings()
-    updateGuestPastAndUpcomingBookings()
-    calculateClientExpenses()
-    // enableElement(searchBookingsButton2)
-    // hide(loadingAnimation)
-}
-
-function updateContainers() {
-    updateAvailableContainer()
-    updatePastAndUpcomingBookingsContainer()
-    updateGuestAvailableBookings()
-    updateGuestPastAndUpcomingBookings()
 }
 
 function currentDate() {
@@ -430,13 +415,15 @@ function updateGuestAvailableBookings() {
 
 function updateGuestPastAndUpcomingBookings() {
     guestPastAndUpcomingBookingContainer.innerHTML = ''
+    console.log('room id from post', roomIdFromPost)
     currentClient.roomsBooked.forEach(booking => {
+        console.log('booking id', booking.bookingId)
         guestPastAndUpcomingBookingContainer.innerHTML += `<section class="guest-booking-details">
         <p class="room-spec2" id="date-booked">Date Booked: ${booking.date}</p>
         <p class="room-spec2" id="room-detail-title">Room Details:</p>
         <p class="room-spec2" id="room-bed-info">Bed size: ${booking.bedSize} [x${booking.numBeds}]</p>
         <p class="room-spec2" id="rates2"> Cost: $${booking.costPerNight} per night</p>
-        <button class="manager-delete-booking" id=${roomIdFromPost || booking.bookingId}>Delete</button>
+        <button class="manager-delete-booking" id=${booking.bookingId}>Delete</button>
       </section>`
         })
 }
@@ -530,13 +517,6 @@ function managerLogOutFunction() {
 function displayClientDetails(client) {
     welcomeUserMessage.innerText = `Welcome, ${client.name}`
     userExpenseMessage.innerText = `Your total expenses: $${client.expenses}`
-}
-
-function reFetch() {
-    allCustomersFetch()
-    roomsFetch()
-    // bookingsFetch()
-    // changeBookingData(allBookingsData, allRoomsData)
 }
 
 function resetAndReFetch() {
