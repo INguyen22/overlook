@@ -206,16 +206,7 @@ function calculateClientExpenses() {
 function renderRoomsAvailable(dateValue) {
     let dateInput = dateValue.value.split("-")
     selectedDate = dateInput.join("/")
-    availableRoomsonDate = currentClient.renderAvailableRooms(selectedDate, allBookingsData, allRoomsData)
-    resetAvailableRoomsContainers()
-    if(availableRoomsonDate.length !== 0) {
-        clearErrorMessages()
-        availableRoomsonDate.forEach(room => {
-            filterRoomTypeContainers(room)
-        })
-    } else {
-        displayNoRoomsError()
-    }
+    determineAvailableRoomsConditions()
 }
 
 function filterAvailableRoomsByRoomType(selection) {
@@ -259,10 +250,15 @@ function currentDateNumbers() {
 }
 
 function findGuest() {
-    currentClient = clients.find(client => client.name.toLowerCase() === findGuestInput.value.toLowerCase())
-    currentClient.determineUserPastBookings()
-    updateGuestPastAndUpcomingBookings()
-    calculateClientExpenses()
+    if(findGuestInput.value === '') {
+        managerErrorMessage.innerText = `Please enter the client's first and last name`
+    } else {
+        clearErrorMessages()
+        currentClient = clients.find(client => client.name.toLowerCase() === findGuestInput.value.toLowerCase())
+        currentClient.determineUserPastBookings()
+        updateGuestPastAndUpcomingBookings()
+        calculateClientExpenses()
+    }
 }
 
 function displayRoomTypeOptions() {
@@ -314,6 +310,7 @@ function renderClientPage(client) {
     showPastBookings()
     displayRoomTypeOptions()
 }
+
 function renderManagerPage() {
     hide(loginPage)
     show(managerPage)
@@ -339,6 +336,25 @@ function renderRoomTypeOptions(uniqueRoomTypes) {
         <option disabled hidden selected>Room Type</option>
         <option value="${roomType}">${roomType}</option>`
     })
+}
+
+function determineAvailableRoomsConditions() {
+    if(selectedDate === '' || findGuestInput.value === '' && !managerPage.classList.contains('hidden')) {
+        errorMessage.innerText = 'Please select a date'
+        managerErrorMessage.innerText = 'Please select a date or find a client'
+    } else {
+        availableRoomsonDate = currentClient.renderAvailableRooms(selectedDate, allBookingsData, allRoomsData)
+        resetAvailableRoomsContainers()
+        clearErrorMessages()
+        if(availableRoomsonDate.length !== 0) {
+            clearErrorMessages()
+            availableRoomsonDate.forEach(room => {
+                filterRoomTypeContainers(room)
+            })
+        } else {
+            displayNoRoomsError()
+        }
+    }
 }
 
 function renderUniqueRooms() {
@@ -517,17 +533,29 @@ function displayClientDetails(client) {
 }
 
 function resetAndReFetch() {
-    clients = []
-    currentClient = ''
+    resetExpenseMessages()
+    setVariablesToEmptyStringAndArrays()
+    clearErrorMessages()
+    allCustomersFetch()
+    roomsFetch()
+    bookingsFetch()
+}
+
+function resetExpenseMessages() {
     userExpenseMessage.innerText = `Your total expenses: $0.00`
     guestExpenseMessage.innerText = `Guest total expenses: $0.00`
+}
+
+function setVariablesToEmptyStringAndArrays() {
+    clients = []
+    currentClient = ''
     availableRoomsContainer.innerHTML = ``
     pastAndUpcomingBookingContainer.innerHTML = ``
     guestAvailableRoomsContainer.innerHTML = ''
     guestPastAndUpcomingBookingContainer.innerHTML = ''
-    allCustomersFetch()
-    roomsFetch()
-    bookingsFetch()
+    calenderInput.value = ''
+    managerCalenderInput.value = ''
+    findGuestInput.value = ''
 }
 
 function show(element) {

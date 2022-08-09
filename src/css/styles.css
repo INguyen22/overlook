@@ -233,7 +233,7 @@ aside {
   height: 70vh;
 }
 
-.error-message {
+.error-message, .manager-error-message {
   margin-left: 80px;
   font-weight: bold;
   font-size: 17px;
