@@ -34,12 +34,13 @@
         <h3 class="stay-statement">Book your next stay</h3>
         <section class="booking-and-filtering">
           <label for="check-in">Check-In Date
-            <input type="date" id='calenderInput' data-date-format="MM DD YYYY" required></input>
+            <input type="date" id='calenderInput' data-date-format="MM DD YYYY" min="2022-08-10" required></input>
           </label>
+          <button class="search-button-date">search</button>
           <label for="filter-rooms">Room Type:</label>
           <select id="user-roomtype-options"class="rooms" name="rooms">
           </select>
-          <button class="search-button">search</button>
+          <button class="filter-button-room">filter</button>
         </section>
         <h3 class="available-rooms">Available Rooms</h3>
         <p class="error-message"></p>
@@ -75,16 +76,16 @@
     </section>
     <section class="guest-check-in-info">
       <section class="guest-booking-and-filtering">
-        <label for="check-in">Check-In Date</label>
-        <input type="date" id="managerCalenderInput" data-date-format="MM DD YYYY"></input>
+        <label for="check-in">Check-In Date
+          <input type="date" id="managerCalenderInput" data-date-format="MM DD YYYY"></input>
+          <button class="search-button-date2">search</button>
+        </label>
         <label for="filter-rooms">Room Type:</label>
         <select id="guest-roomtype-options" class="rooms" name="rooms">
-          <!-- remove when getting rooms  -->
-          <option value="room">RoomTypeHere</option>
-          <!-- remove when getting rooms  -->
         </select>
-        <button class="search-button2">search</button>
+        <button class="filter-button-room2">filter</button>
       </section>
+      <p class="manager-error-message"></p>
         <h3 class="guest-available-rooms">Available Rooms</h3>
         <container class="guest-rooms-container">
         </container>
