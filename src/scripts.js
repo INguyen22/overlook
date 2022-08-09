@@ -58,6 +58,9 @@ let availableRoomsonDate;
 let currentDay;
 let roomsBookedOnDay = []
 let roomIdFromPost;
+let year;
+let month;
+let day;
 
 //event listeners
 window.addEventListener('load', function() {
@@ -69,7 +72,6 @@ loginButton.addEventListener('click', login)
 userLogOut.addEventListener('click', userLogOutFunction)
 managerLogOut.addEventListener('click', managerLogOutFunction)
 searchBookingsButton.addEventListener('click', function() {
-    //showAvailableRoomsByDateandRoomType(calenderInput)
     renderRoomsAvailable(calenderInput)
 })
 filterBookingsButton.addEventListener('click', function() {
@@ -90,17 +92,13 @@ guestAvailableRoomsContainer.addEventListener('click', function(event) {
 guestPastAndUpcomingBookingContainer.addEventListener('click', function(event) {
     deleteRoom(event)
 })
-findGuestSubmitButton.addEventListener('click', function() {
-    findGuest()
-    console.log(currentClient)
-})
+findGuestSubmitButton.addEventListener('click', findGuest)
 //fetch functions
 function allCustomersFetch() {
     fetch(`http://localhost:3001/api/v1/customers`)
     .then(response => response.json())
     .then(data => {
         allCustomersData = data.customers
-        //console.log(allCustomersData)
         clientGenerator()
     })
 }
@@ -110,7 +108,6 @@ function roomsFetch() {
     .then(response => response.json())
     .then(data => {
         allRoomsData = data.rooms
-        //console.log('rooms data', allRoomsData)
     })
 }
 
@@ -307,23 +304,6 @@ function filterAvailableRoomsByRoomType(selection) {
     })
 }
 
-// function showAvailableRoomsByDateandRoomType(dateValue) {
-//     let dateInput = dateValue.value.split("-")
-//         selectedDate = dateInput.join("/")
-//         console.log('select date', selectedDate)
-//     let availableRooms = currentClient.filterByDateAndOrRoomType(selectedDate, roomTypeSelection.options[roomTypeSelection.selectedIndex].text)
-//     if(!availableRooms) {
-//         errorMessage.innerText = "Sorry, there are no rooms available for your selected date and or room type. Please try again"
-//         managerErrorMessage.innerText = "Sorry, there are no rooms available for your selected date and or room type. Please try again"
-//     }
-//     else {
-//     errorMessage.innerText = ''
-//     managerErrorMessage.innerText = ''
-//     updateAvailableContainer()
-//     updateGuestAvailableBookings()
-//     }
-// }
-
 function displayRoomTypeOptions() {
     let roomTypes = allRoomsData.map(room => room.roomType)
     let uniqueRoomTypes = roomTypes.filter((roomType, index) => {
@@ -371,14 +351,21 @@ async function deleteRoom(event) {
     if(event.target.classList.contains(`manager-delete-booking`)) {
         await deleteBookingsFetch(event.target.id).then(() => {
             currentClient.roomsBooked.forEach(bookedRoom => {
-                if(bookedRoom.bookingId === event.target.id) {
-                    currentClient.roomsBooked.splice(currentClient.roomsBooked.indexOf(bookedRoom), 1)
-                }
+                let splitBookedDate = bookedRoom.date.split('/')
+                let bookedDateNumbers = splitBookedDate.map(bookedDate => parseInt(bookedDate))
+                if(bookedRoom.bookingId === event.target.id && bookedDateNumbers[0] >= year 
+                    && bookedDateNumbers[1] >= month 
+                    && bookedDateNumbers[2] >= day) {
+                        managerErrorMessage.innerHTML = ''
+                        currentClient.roomsBooked.splice(currentClient.roomsBooked.indexOf(bookedRoom), 1)
+                        updateGuestPastAndUpcomingBookings()
+                        calculateClientExpenses()
+                    } else {
+                        managerErrorMessage.innerHTML = 'That booking is from the past no need to delete it.'
+                    }
+                })
             })
-            updateGuestPastAndUpcomingBookings()
-            calculateClientExpenses()
-        })
-    }
+        }
 }
 
 function currentDate() {
@@ -386,6 +373,16 @@ function currentDate() {
     const splitDate = date.split("-")
     const joinDate = splitDate.join('/')
     currentDay = joinDate
+    currentDateNumbers()
+}
+
+function currentDateNumbers() {
+    let splitDay = currentDay.split('/')
+    const dateNumbers = splitDay.map(date => parseInt(date))
+    year = dateNumbers[0]
+    month = dateNumbers[1]
+    day = dateNumbers[2]
+
 }
 
 function findGuest() {
@@ -395,38 +392,6 @@ function findGuest() {
     calculateClientExpenses()
 }
 
-function updateGuestAvailableBookings() {
-    guestAvailableRoomsContainer.innerHTML = ''
-    availableRoomsonDate.forEach(room => {
-        guestAvailableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
-        <section class="room-info">
-        <p class="room-spec" id="${room.number}">Room Type: ${room.roomType}</p>
-        <p class="room-spec" id="room-detail-title">Room Details:</p>
-        <p class="room-spec" id="room-bed-info">Bed size: ${room.bedSize} [x${room.numBeds}]</p>
-        <p class="room-spec" id="room-date-info">Available Date: ${selectedDate}</p>
-        </section>
-        <section class="rates-and-book">
-        <p class="room-spec" id="rates">$${room.costPerNight} per night</p>
-        <button class="book" id='${room.number}'>Book</button>
-        </section>
-        </section>`
-    })
-}
-
-function updateGuestPastAndUpcomingBookings() {
-    guestPastAndUpcomingBookingContainer.innerHTML = ''
-    console.log('room id from post', roomIdFromPost)
-    currentClient.roomsBooked.forEach(booking => {
-        console.log('booking id', booking.bookingId)
-        guestPastAndUpcomingBookingContainer.innerHTML += `<section class="guest-booking-details">
-        <p class="room-spec2" id="date-booked">Date Booked: ${booking.date}</p>
-        <p class="room-spec2" id="room-detail-title">Room Details:</p>
-        <p class="room-spec2" id="room-bed-info">Bed size: ${booking.bedSize} [x${booking.numBeds}]</p>
-        <p class="room-spec2" id="rates2"> Cost: $${booking.costPerNight} per night</p>
-        <button class="manager-delete-booking" id=${booking.bookingId}>Delete</button>
-      </section>`
-        })
-}
 
 function renderRoomsBookedOnCurrentDate() {
     const roomsBooked = clients.forEach(client => {
@@ -462,13 +427,13 @@ function availableRoomsStats() {
 }
 
 function calculateTotalRevenueForDate() {
-   const revenue = roomsBookedOnDay.reduce((sum, room) => {
+    const revenue = roomsBookedOnDay.reduce((sum, room) => {
         let total = sum + room.costPerNight
         return total
-   }, 0)
-   return revenueStats.innerText = `Total Revenue: $${revenue.toFixed(2)}`
+    }, 0)
+    return revenueStats.innerText = `Total Revenue: $${revenue.toFixed(2)}`
 }
-        
+
 
 function updateAvailableContainer() {
     availableRoomsContainer.innerHTML = ''
@@ -498,6 +463,39 @@ function updatePastAndUpcomingBookingsContainer() {
         <p class="room-spec2" id="rates2"> Cost: $${booking.costPerNight} per night</p>
         </section>`
     })
+}
+
+function updateGuestAvailableBookings() {
+    guestAvailableRoomsContainer.innerHTML = ''
+    availableRoomsonDate.forEach(room => {
+        guestAvailableRoomsContainer.innerHTML += `<section class="room-details-and-book-container">
+        <section class="room-info">
+        <p class="room-spec" id="${room.number}">Room Type: ${room.roomType}</p>
+        <p class="room-spec" id="room-detail-title">Room Details:</p>
+        <p class="room-spec" id="room-bed-info">Bed size: ${room.bedSize} [x${room.numBeds}]</p>
+        <p class="room-spec" id="room-date-info">Available Date: ${selectedDate}</p>
+        </section>
+        <section class="rates-and-book">
+        <p class="room-spec" id="rates">$${room.costPerNight} per night</p>
+        <button class="book" id='${room.number}'>Book</button>
+        </section>
+        </section>`
+    })
+}
+
+function updateGuestPastAndUpcomingBookings() {
+    guestPastAndUpcomingBookingContainer.innerHTML = ''
+    console.log('room id from post', roomIdFromPost)
+    currentClient.roomsBooked.forEach(booking => {
+        console.log('booking id', booking.bookingId)
+        guestPastAndUpcomingBookingContainer.innerHTML += `<section class="guest-booking-details">
+        <p class="room-spec2" id="date-booked">Date Booked: ${booking.date}</p>
+        <p class="room-spec2" id="room-detail-title">Room Details:</p>
+        <p class="room-spec2" id="room-bed-info">Bed size: ${booking.bedSize} [x${booking.numBeds}]</p>
+        <p class="room-spec2" id="rates2"> Cost: $${booking.costPerNight} per night</p>
+        <button class="manager-delete-booking" id=${booking.bookingId}>Delete</button>
+      </section>`
+        })
 }
 
 function userLogOutFunction() {
