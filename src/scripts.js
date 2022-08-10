@@ -1,10 +1,4 @@
-// This is the JavaScript entry file - your code begins here
-// Do not delete or rename this file ********
-// An example of how you tell webpack to use a CSS (SCSS) file
 import './css/styles.css';
-
-// An example of how you tell webpack to use an image (also need to link to it in the index.html)
-import './images/turing-logo.png'
 //imported classes
 import Bookings from './classes/bookings.js'
 import Rooms from './classes/rooms.js'
@@ -92,6 +86,7 @@ guestPastAndUpcomingBookingContainer.addEventListener('click', function(event) {
     deleteRoom(event)
 })
 findGuestSubmitButton.addEventListener('click', findGuest)
+
 //fetch functions
 function allCustomersFetch() {
     fetch(`http://localhost:3001/api/v1/customers`)
@@ -390,9 +385,7 @@ function removeDeletedRoomFromClientsBookedRooms(event) {
     currentClient.roomsBooked.forEach(bookedRoom => {
         let splitBookedDate = bookedRoom.date.split('/')
         let bookedDateNumbers = splitBookedDate.map(bookedDate => parseInt(bookedDate))
-        if(bookedRoom.bookingId === event.target.id && bookedDateNumbers[0] >= year 
-            && bookedDateNumbers[1] >= month 
-            && bookedDateNumbers[2] >= day) {
+        if(bookedRoom.bookingId === event.target.id && bookedDateNumbers[0] >= year) {
                 managerErrorMessage.innerHTML = ''
                 currentClient.roomsBooked.splice(currentClient.roomsBooked.indexOf(bookedRoom), 1)
                 updateGuestPastAndUpcomingBookings()
@@ -403,7 +396,6 @@ function removeDeletedRoomFromClientsBookedRooms(event) {
         })
     }
     
-
 function resetAvailableRoomsContainers() {
     availableRoomsContainer.innerHTML = ''
     guestAvailableRoomsContainer.innerHTML = ''
