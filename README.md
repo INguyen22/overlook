@@ -8,7 +8,6 @@
   - [Technologies](#technologies)
   - [Features](#features)
   - [Application in action](#application-in-action)
-  - [Deployed Page](#deployed-page)
   - [Possible Future Extensions](#possible-future-extensions)
   - [Set Up](#set-up)
   - [Contributors](#contributors)
@@ -61,6 +60,3 @@ To access the application locally:
 - To view tests, run `npm test`
 - In addition to cloning down this application's repo, you will also need to clone down this [repository](https://github.com/turingschool-examples/overlook-api) in your terminal to have this server running in addition to the one above.
 - Once cloned, run `npm install` and `npm start`
-
-## Deployed Page
-https://inguyen22.github.io/overlook/
