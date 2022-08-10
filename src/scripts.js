@@ -54,6 +54,7 @@ let roomIdFromPost;
 let year;
 let month;
 let day;
+let bookedDateNumbers;
 
 //event listeners
 window.addEventListener('load', function() {
@@ -215,18 +216,37 @@ function filterAvailableRoomsByRoomType(selection) {
 async function bookRoom(event) {
     if(event.target.classList.contains('book')) {
         roomNumber = parseInt(event.target.id)
-        await addBookingsPost().then(() => updateAvailableRoomsAndContainers())
-    }
-}
-
-
-async function deleteRoom(event) {
-    if(event.target.classList.contains(`manager-delete-booking`)) {
-        await deleteBookingsFetch(event.target.id).then(() => {
-            removeDeletedRoomFromClientsBookedRooms(event)
+        await addBookingsPost().then(() => {
+            updateAvailableRoomsAndContainers()
+            console.log('rooms booked', currentClient.roomsBooked)
         })
     }
 }
+
+async function deleteRoom(event) {
+    currentClient.roomsBooked.forEach(roomBooked => {
+        if(event.target.id === roomBooked.bookingId ) {
+            let splitBookedDate = roomBooked.date.split('/')
+            bookedDateNumbers = splitBookedDate.map(bookedDate => parseInt(bookedDate))
+        }
+    })
+    if(event.target.classList.contains(`manager-delete-booking`) && bookedDateNumbers[0] >= year && bookedDateNumbers[1] >= month) {
+        await deleteBookingsFetch(event.target.id).then(() => removeDeletedRoomFromClientsBookedRooms(event))
+    } else {
+         managerErrorMessage.innerHTML = 'That booking is from the past no need to delete it.'
+    }
+}
+
+function removeDeletedRoomFromClientsBookedRooms(event) {
+    currentClient.roomsBooked.forEach(bookedRoom => {
+        if(bookedRoom.bookingId === event.target.id) {
+                managerErrorMessage.innerHTML = ''
+                currentClient.roomsBooked.splice(currentClient.roomsBooked.indexOf(bookedRoom), 1)
+                updateGuestPastAndUpcomingBookings()
+                calculateClientExpenses()
+            } 
+        })
+    }
 
 function currentDate() {
     let date = new Date().toISOString().split('T')[0]
@@ -380,21 +400,6 @@ function updateAvailableRoomsAndContainers() {
     updateGuestPastAndUpcomingBookings()
     calculateClientExpenses()
 }
-
-function removeDeletedRoomFromClientsBookedRooms(event) {
-    currentClient.roomsBooked.forEach(bookedRoom => {
-        let splitBookedDate = bookedRoom.date.split('/')
-        let bookedDateNumbers = splitBookedDate.map(bookedDate => parseInt(bookedDate))
-        if(bookedRoom.bookingId === event.target.id && bookedDateNumbers[0] >= year) {
-                managerErrorMessage.innerHTML = ''
-                currentClient.roomsBooked.splice(currentClient.roomsBooked.indexOf(bookedRoom), 1)
-                updateGuestPastAndUpcomingBookings()
-                calculateClientExpenses()
-            } else {
-                managerErrorMessage.innerHTML = 'That booking is from the past no need to delete it.'
-            }
-        })
-    }
     
 function resetAvailableRoomsContainers() {
     availableRoomsContainer.innerHTML = ''
