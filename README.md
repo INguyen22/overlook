@@ -1,96 +1,63 @@
-# Webpack Starter Kit
+# Overlook
 
-## Clone This Repo
+# Introduction
+- this project was the final project for Mod 2 students to individually demonstrate their understanding of asynchronous JavaScript and how to use fetch calls to retrieve data from a web api by making a hotel website. In addition, test driven developement was used to develope the classes and methods.
 
-That's right, _clone_ not fork. You will use this repo multiple times, but you can only fork a repository once. So here is what you need to do to clone the repo and still be able to push changes to your repo:
+## Table of Contents
+  - [Introduction](#introduction)
+  - [Technologies](#technologies)
+  - [Features](#features)
+  - [Application in action](#application-in-action)
+  - [Deployed Page](#deployed-page)
+  - [Possible Future Extensions](#possible-future-extensions)
+  - [Set Up](#set-up)
+  - [Contributors](#contributors)
+  - [Project Specs](#project-specs)
 
-1. Clone down this repo. Since you don't want to name your project "webpack-starter-kit", you can use an optional argument when you run `git clone` (you replace the `[...]` with the terminal command arguments): `git clone [remote-address] [what you want to name the repo]`
-1. Remove the default remote: `git remote rm origin` (notice that `git remote -v` not gives you back nothing)
-1. Create a new repo on GitHub with the name of `[what you want to name the repo]` to be consistent with naming
-1. Copy the address that you would use to clone down this repo - something like `git@github.com:...`
-1. Add this remote to your cloned down repo: `git remote add origin [address you copied in the previous step]` - do not include the brackets
+## Technologies
+- Mocha and Chai
+- JavaScript
+- HTML
+- CSS
 
-Now try to commit something (just add a line in the README) and push it up to your new repo. If everything is setup correctly, you should see the changes on GitHub.
+## features
+- This website allows users to login with their respectable username ranging from 'customer1' to 'customer50' and a password of 'overlook2021'
+- upon logging in as a customer, the user will be able to see all the reservations they've made in the past and any upcoming ones as well. 
+- The user can select a date on which they want to make a reservation and filter the availble rooms by room type.
+- the user can book a reservation and see that new reservation appear in their past and upcoming reservations section. 
+- The user will be able to see how much they've spent on past and upcoming bookings and they expenses will update with every new booking that they've made
+- The user can logout and log back in as a different user
+- Users may also log in as a manager with the following credentials: username:'manager', password: 'overlook2021'
+- As a manager, the user can see their hotel's revenue, occupied rooms, and available rooms for the day.
+- the manager can find their clients with their first and last name and see what bookings that client has made so far.
+- The manager can find reservations for a user and add it to the clients upcoming and past reservation list
+- The manager can aslo delete reservations from a user but not any reservations from the past. 
 
-## Setup
+## Application in Action
 
-After one person has gone through the steps of cloning down this repo and editing the remote, everyone should clone down the repo.
+## Challenges
+- working sround asynchronous Javascript to update the DOM
+## Possible Future Extentions
+- Allow the users to delete reservations they may not want on their own
+- Have revervations have more details to them, such as, pictures or views
+- Have the passowrd the user types in be hidden 
+## Contributors
+  - [Ivy Nguyen](https://github.com/INguyen22)
+## Project Specs
+  The spec for this project can be found [here](https://frontend.turing.edu/projects/overlook.html).
 
-Then install the library dependencies. Run:
+## Set Up
+To access the application locally:
+- Clone this repository to your local machine
+- Type `cd` into the application
+- Run `npm install` to run the local serve to see the HTML page
+- Paste `http://localhost:8080/` into your browser to view the HTML page
+- When you would like to stop running the local server, press control + c in your terminal
+- To view tests, run `npm test`
+- In addition to cloning down this application's repo, you will also need to clone down this [repository](https://github.com/turingschool-examples/overlook-api) in your terminal to have this server running in addition to the one above.
+- Once cloned, run `npm install` and `npm start`
 
-```bash
-npm install
-```
-
-To verify that it is setup correctly, run `npm start` in your terminal. Go to `http://localhost:8080/` and you should see a page with the Turing logo image and a beautiful gradient background. If that's the case, you're good to go. Enter `control + c` in your terminal to stop the server at any time.
-
-## Where to Add Your Code
-
-### JavaScript
-
-You have to be very intentional with where you add your feature code. This repo uses a tool called [webpack](https://webpack.js.org/) to combine many JavaScript files into one big file. Webpack enables you to have many, separate JavaScript files to keep your code organized and readable. Webpack expects all of your code files to be in a specific place, or else it doesn't know how to combine them all behind the scenes.
-
-**Create all of your feature code files in the `src` directory.**
-
-Since code is separated into multiple files, you need to use the `import` and `export` syntax to share code across file.
-
-Here is a video that walks through some information about [import and export](https://www.youtube.com/watch?v=_3oSWwapPKQ). There are a lot of resources out there about `import` and `export`, and resources will sometimes call them `ES6 modules`. It's something you will see in React and beyond.
-
-### HTML
-
-Add the HTML you need in the `index.html` file in the `./dist` directory. There is some boilerplate HTML that exists from the start that you can modify.
-
-### Images
-
-Add your image files in the `src/images` directory. Similar to CSS files, you need to `import` image files in the JavaScript entry file (`scripts.js`). Then go into the HTML and add an `img` element with the `src` attribute pointing to the `images` directory. There is an example in the `index.html` file for you to see.
-
-## How to View Your Code in Action
-
-In the terminal, run:
-
-```bash
-npm start
-```
-
-You will see a bunch of lines output to your terminal. One of those lines will be something like:
-
-```bash
-Project is running at http://localhost:8080/
-```
-
-Go to `http://localhost:8080/` in your browser to view your code running in the browser.
-
----
-
-## Test Files Organization
-
-Similar to feature code, your test code needs to be put in a specific place for it to run successfully.
-
-**Put all of your test files in the `test` directory.** As a convention, all test filenames should end with `-test.js`. For instance: `box-test.js`.
-
-## Running Your Tests
-
-Run your test suite using the command:
-
-```bash
-npm test
-```
-
-The test results will output to the terminal.
-
----
-
-## Linting Your Code
-
-Run the command in your terminal `npm run lint` to run the linter on your JavaScript code. There will be errors and warnings right from the start in this starter kit - the linter is still running successfully.
-
-Your linter will look at the JavaScript files you have within the `src` directory and the `test` directory.
-
-## Webpack?
-
-If you look in the `package.json` file, you'll see one of the library dependencies called `webpack`. If you're interested in learning more about what Webpack is and how it works behind the scenes, take a look through the [Webpack configuration documentation](https://webpack.js.org/concepts/).
-
-## Deploying to GitHub Pages
+## Deployed Page
 
 _If you are finished with the functionality and testing of your project_, then you can consider deploying your project to the web! This way anyone can play it without cloning down your repo.
 
