@@ -34,6 +34,11 @@
 - The manager can aslo delete reservations from a user but not any reservations from the past. 
 
 ## Application in Action
+![client-in-action](https://user-images.githubusercontent.com/100492419/183787593-f1eea4dc-1b81-4f39-83c5-8854761171ae.gif)
+![manager-in-action](https://user-images.githubusercontent.com/100492419/183787700-d5bfb45a-9647-42f3-a366-79273feec6e4.gif)
+![Screen Shot 2022-08-09 at 7 02 56 PM](https://user-images.githubusercontent.com/100492419/183787782-3597f0c2-bdbf-476a-bc7f-3039dfc8362c.png)
+![Screen Shot 2022-08-09 at 7 03 22 PM](https://user-images.githubusercontent.com/100492419/183787825-1be4c498-d76b-4068-a345-fec274cf2b93.png)
+![Screen Shot 2022-08-09 at 7 04 25 PM](https://user-images.githubusercontent.com/100492419/183787929-322f0ae0-e700-4f87-b423-8d384b516637.png)
 
 ## Challenges
 - working sround asynchronous Javascript to update the DOM
