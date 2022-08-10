@@ -1,10 +1,4 @@
-// This is the JavaScript entry file - your code begins here
-// Do not delete or rename this file ********
-// An example of how you tell webpack to use a CSS (SCSS) file
 import './css/styles.css';
-
-// An example of how you tell webpack to use an image (also need to link to it in the index.html)
-import './images/turing-logo.png'
 //imported classes
 import Bookings from './classes/bookings.js'
 import Rooms from './classes/rooms.js'
@@ -92,6 +86,7 @@ guestPastAndUpcomingBookingContainer.addEventListener('click', function(event) {
     deleteRoom(event)
 })
 findGuestSubmitButton.addEventListener('click', findGuest)
+
 //fetch functions
 function allCustomersFetch() {
     fetch(`http://localhost:3001/api/v1/customers`)
@@ -206,16 +201,7 @@ function calculateClientExpenses() {
 function renderRoomsAvailable(dateValue) {
     let dateInput = dateValue.value.split("-")
     selectedDate = dateInput.join("/")
-    availableRoomsonDate = currentClient.renderAvailableRooms(selectedDate, allBookingsData, allRoomsData)
-    resetAvailableRoomsContainers()
-    if(availableRoomsonDate.length !== 0) {
-        clearErrorMessages()
-        availableRoomsonDate.forEach(room => {
-            filterRoomTypeContainers(room)
-        })
-    } else {
-        displayNoRoomsError()
-    }
+    determineAvailableRoomsConditions()
 }
 
 function filterAvailableRoomsByRoomType(selection) {
@@ -259,10 +245,15 @@ function currentDateNumbers() {
 }
 
 function findGuest() {
-    currentClient = clients.find(client => client.name.toLowerCase() === findGuestInput.value.toLowerCase())
-    currentClient.determineUserPastBookings()
-    updateGuestPastAndUpcomingBookings()
-    calculateClientExpenses()
+    if(findGuestInput.value === '') {
+        managerErrorMessage.innerText = `Please enter the client's first and last name`
+    } else {
+        clearErrorMessages()
+        currentClient = clients.find(client => client.name.toLowerCase() === findGuestInput.value.toLowerCase())
+        currentClient.determineUserPastBookings()
+        updateGuestPastAndUpcomingBookings()
+        calculateClientExpenses()
+    }
 }
 
 function displayRoomTypeOptions() {
@@ -314,6 +305,7 @@ function renderClientPage(client) {
     showPastBookings()
     displayRoomTypeOptions()
 }
+
 function renderManagerPage() {
     hide(loginPage)
     show(managerPage)
@@ -339,6 +331,25 @@ function renderRoomTypeOptions(uniqueRoomTypes) {
         <option disabled hidden selected>Room Type</option>
         <option value="${roomType}">${roomType}</option>`
     })
+}
+
+function determineAvailableRoomsConditions() {
+    if(selectedDate === '' || findGuestInput.value === '' && !managerPage.classList.contains('hidden')) {
+        errorMessage.innerText = 'Please select a date'
+        managerErrorMessage.innerText = 'Please select a date or find a client'
+    } else {
+        availableRoomsonDate = currentClient.renderAvailableRooms(selectedDate, allBookingsData, allRoomsData)
+        resetAvailableRoomsContainers()
+        clearErrorMessages()
+        if(availableRoomsonDate.length !== 0) {
+            clearErrorMessages()
+            availableRoomsonDate.forEach(room => {
+                filterRoomTypeContainers(room)
+            })
+        } else {
+            displayNoRoomsError()
+        }
+    }
 }
 
 function renderUniqueRooms() {
@@ -374,9 +385,7 @@ function removeDeletedRoomFromClientsBookedRooms(event) {
     currentClient.roomsBooked.forEach(bookedRoom => {
         let splitBookedDate = bookedRoom.date.split('/')
         let bookedDateNumbers = splitBookedDate.map(bookedDate => parseInt(bookedDate))
-        if(bookedRoom.bookingId === event.target.id && bookedDateNumbers[0] >= year 
-            && bookedDateNumbers[1] >= month 
-            && bookedDateNumbers[2] >= day) {
+        if(bookedRoom.bookingId === event.target.id && bookedDateNumbers[0] >= year) {
                 managerErrorMessage.innerHTML = ''
                 currentClient.roomsBooked.splice(currentClient.roomsBooked.indexOf(bookedRoom), 1)
                 updateGuestPastAndUpcomingBookings()
@@ -387,7 +396,6 @@ function removeDeletedRoomFromClientsBookedRooms(event) {
         })
     }
     
-
 function resetAvailableRoomsContainers() {
     availableRoomsContainer.innerHTML = ''
     guestAvailableRoomsContainer.innerHTML = ''
@@ -517,17 +525,29 @@ function displayClientDetails(client) {
 }
 
 function resetAndReFetch() {
-    clients = []
-    currentClient = ''
+    resetExpenseMessages()
+    setVariablesToEmptyStringAndArrays()
+    clearErrorMessages()
+    allCustomersFetch()
+    roomsFetch()
+    bookingsFetch()
+}
+
+function resetExpenseMessages() {
     userExpenseMessage.innerText = `Your total expenses: $0.00`
     guestExpenseMessage.innerText = `Guest total expenses: $0.00`
+}
+
+function setVariablesToEmptyStringAndArrays() {
+    clients = []
+    currentClient = ''
     availableRoomsContainer.innerHTML = ``
     pastAndUpcomingBookingContainer.innerHTML = ``
     guestAvailableRoomsContainer.innerHTML = ''
     guestPastAndUpcomingBookingContainer.innerHTML = ''
-    allCustomersFetch()
-    roomsFetch()
-    bookingsFetch()
+    calenderInput.value = ''
+    managerCalenderInput.value = ''
+    findGuestInput.value = ''
 }
 
 function show(element) {
